@@ -42,6 +42,30 @@ def convert_to_eur(price, rate):
     return str(round(float(price)/float(rate), 4))
 
 
+def sale(root, date, quantity, price):
+    child = SubElement(root, 'Sale')
+    s_child = SubElement(child, 'F6')
+    s_child.text = date
+    s_child = SubElement(child, 'F7')
+    s_child.text = quantity
+    s_child = SubElement(child, 'F9')
+    s_child.text = price
+    s_child = SubElement(child, 'F10')
+    s_child.text = 'true'
+
+
+def purchase(root, date, quantity, price):
+    child = SubElement(root, 'Purchase')
+    s_child = SubElement(child, 'F1')
+    s_child.text = date
+    s_child = SubElement(child, 'F2')
+    s_child.text = 'B'
+    s_child = SubElement(child, 'F3')
+    s_child.text = quantity
+    s_child = SubElement(child, 'F4')
+    s_child.text = price
+
+
 if __name__ == '__main__':
     files = get_files()
 
