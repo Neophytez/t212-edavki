@@ -1,7 +1,6 @@
 import csv
 import os
 from xml.etree.ElementTree import Element, SubElement, tostring
-from xml.etree import ElementTree as ElTr
 from xml.etree import ElementTree
 from xml.dom import minidom
 
@@ -142,6 +141,8 @@ if __name__ == '__main__':
     files = get_files()
 
     for file in files:
+        if file == '.gitkeep':
+            continue
         read_files(file)
 
     name_space = {
