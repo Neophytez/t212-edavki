@@ -151,11 +151,13 @@ if __name__ == '__main__':
     }
 
     envelope = Element('Envelope', name_space)
+    header(envelope)
     SubElement(envelope, 'edp:AttachmentList')
     SubElement(envelope, 'edp:Signatures')
     body = SubElement(envelope, 'body')
     SubElement(body, 'edp:bodyContent')
     doh = SubElement(body, 'Doh_KDVP')
+    kdvp(doh)
 
     for row in rows:
         if row[0].split()[0] == 'Dividend':
