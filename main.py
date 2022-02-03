@@ -66,6 +66,78 @@ def purchase(root, date, quantity, price):
     s_child.text = price
 
 
+def kdvp(root):
+    top = SubElement(root, 'KDVP')
+    child = SubElement(top, 'DocumentWorkflowID')
+    child.text = "O"
+    child = SubElement(top, 'Year')
+    child.text = "2021"
+    child = SubElement(top, 'PeriodStart')
+    child.text = "2021-01-01"
+    child = SubElement(top, 'PeriodEnd')
+    child.text = "2021-12-31"
+    child = SubElement(top, 'IsResident')
+    child.text = "true"
+    child = SubElement(top, 'TelephoneNumber')
+    child.text = "069240240"
+    child = SubElement(top, 'SecurityCount')
+    child.text = "0"
+    child = SubElement(top, 'SecurityShortCount')
+    child.text = "0"
+    child = SubElement(top, 'SecurityWithContractCount')
+    child.text = "0"
+    child = SubElement(top, 'SecurityWithContractShortCount')
+    child.text = "0"
+    child = SubElement(top, 'ShareCount')
+    child.text = "0"
+    child = SubElement(top, 'Email')
+    child.text = "your-email@should-go.here"
+
+
+def kdvp_item(root, ticker):
+    child = SubElement(root, 'KDVPItem')
+    s_child = SubElement(child, 'InventoryListType')
+    s_child.text = 'PLVP'
+    s_child = SubElement(child, 'Name')
+    s_child.text = ticker
+    s_child = SubElement(child, 'HasForeignTax')
+    s_child.text = 'false'
+    s_child = SubElement(child, 'HasLossTransfer')
+    s_child.text = 'true'
+    s_child = SubElement(child, 'ForeignTransfer')
+    s_child.text = 'false'
+    s_child = SubElement(child, 'TaxDecreaseConformance')
+    s_child.text = 'false'
+    s_child = SubElement(child, 'Securities')
+    ss_child = SubElement(s_child, 'Code')
+    ss_child.text = ticker
+    ss_child = SubElement(s_child, 'IsFond')
+    ss_child.text = 'false'
+    ss_child = SubElement(s_child, 'Row')
+    sss_child = SubElement(ss_child, 'ID')
+    sss_child.text = '0'
+    return ss_child
+
+
+def header(root):
+    child = SubElement(root, 'edp:Header')
+    s_child = SubElement(child, 'edp:taxpayer')
+    ss_child = SubElement(s_child, 'edp:taxNumber')
+    ss_child.text = "12345678"
+    ss_child = SubElement(s_child, 'edp:taxpayerType')
+    ss_child.text = "FO"
+    ss_child = SubElement(s_child, 'edp:name')
+    ss_child.text = "Full name"
+    ss_child = SubElement(s_child, 'edp:address1')
+    ss_child.text = "Address"
+    ss_child = SubElement(s_child, 'edp:city')
+    ss_child.text = "City"
+    ss_child = SubElement(s_child, 'edp:postNumber')
+    ss_child.text = "1000"
+    ss_child = SubElement(s_child, 'edp:birthDate')
+    ss_child.text = "1995-12-31"
+
+
 if __name__ == '__main__':
     files = get_files()
 
