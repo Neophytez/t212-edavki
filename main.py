@@ -167,3 +167,5 @@ if __name__ == '__main__':
         price = convert_to_eur(row[6], row[8])
 
     save_file(prettify(envelope))
+
+    print('Your XML file is located inside output folder.')
