@@ -1,9 +1,18 @@
 import csv
 import os
 from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree import ElementTree as ElTr
+from xml.etree import ElementTree
+from xml.dom import minidom
 
 
 rows = []
+
+
+def save_file(data):
+    f = open("output/output.xml", "w")
+    f.write(data)
+    f.close()
 
 
 def get_files():
@@ -23,6 +32,12 @@ def read_files(name):
     csv_file.close()
 
 
+def prettify(elem):
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
+
 if __name__ == '__main__':
     files = get_files()
 
@@ -40,3 +55,5 @@ if __name__ == '__main__':
     body = SubElement(envelope, 'body')
     SubElement(body, 'edp:bodyContent')
     doh = SubElement(body, 'Doh_KDVP')
+
+    save_file(prettify(envelope))
