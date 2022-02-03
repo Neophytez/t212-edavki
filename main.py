@@ -166,6 +166,16 @@ if __name__ == '__main__':
         quantity = str(round(float(row[5]), 4))
         price = convert_to_eur(row[6], row[8])
 
+        item = kdvp_item(doh, ticker)
+
+        if row[0].split()[1] == 'buy':
+            purchase(item, date, quantity, price)
+        elif row[0].split()[1] == 'sell':
+            sale(item, date, quantity, price)
+
+        f8 = SubElement(item, 'F8')
+        f8.text = '0.0000'
+
     save_file(prettify(envelope))
 
     print('Your XML file is located inside output folder.')
