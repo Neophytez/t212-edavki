@@ -38,6 +38,10 @@ def prettify(elem):
     return reparsed.toprettyxml(indent="  ")
 
 
+def convert_to_eur(price, rate):
+    return str(round(float(price)/float(rate), 4))
+
+
 if __name__ == '__main__':
     files = get_files()
 
@@ -55,5 +59,14 @@ if __name__ == '__main__':
     body = SubElement(envelope, 'body')
     SubElement(body, 'edp:bodyContent')
     doh = SubElement(body, 'Doh_KDVP')
+
+    for row in rows:
+        if row[0].split()[0] == 'Dividend':
+            continue
+
+        date = row[1].split()[0]
+        ticker = row[3]
+        quantity = str(round(float(row[5]), 4))
+        price = convert_to_eur(row[6], row[8])
 
     save_file(prettify(envelope))
