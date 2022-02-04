@@ -160,7 +160,7 @@ if __name__ == '__main__':
     kdvp(doh)
 
     for row in rows:
-        if row[0].split()[1] != 'buy' or row[0].split()[1] != 'sell':
+        if row[0].split()[1] != 'buy' and row[0].split()[1] != 'sell':
             continue
 
         date = row[1].split()[0]
