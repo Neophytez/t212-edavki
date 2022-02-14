@@ -4,7 +4,7 @@
 
 Python skripta, ki pretvori Trading212 CSV v eDavki XML.
 
-Podpira: Market/limit sell/buy, rate conversion v EUR
+Podpira: Market/limit sell/buy, rate conversion v base EUR, rate conversion iz base USD v EUR (podatke bere iz [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX))
 
 Dividende in ostale zadeve skripta ignorira.
 
