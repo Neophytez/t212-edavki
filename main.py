@@ -1,11 +1,13 @@
 import csv
 import os
-from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.etree.ElementTree import Element, SubElement
 from xml.etree import ElementTree
 from xml.dom import minidom
+import datetime
 
-
+usd_eur = {}
 rows = []
+base_currency = ''
 
 
 def save_file(data):
@@ -14,58 +16,80 @@ def save_file(data):
     f.close()
 
 
-def get_files():
-    return os.listdir("input/")
+def get_files(folder):
+    return os.listdir(folder)
 
 
-def read_files(name):
-    csv_file = open("input/"+name)
-    csvreader = csv.reader(csv_file)
+def validate_header(h):
+    if h[0] != 'Action':
+        return False
+    if h[1] != 'Time':
+        return False
+    if h[3] != 'Ticker':
+        return False
+    if h[5] != 'No. of shares':
+        return False
+    if h[6] != 'Price / share':
+        return False
+    if h[7] != 'Currency (Price / share)':
+        return False
+    if h[8] != 'Exchange rate':
+        return False
+    if h[9].split()[0] != 'Result':
+        return False
 
-    header = next(csvreader)
+    global base_currency
+    base_currency = h[9].split()[1].replace('(', '').replace(')', '')
 
-    global rows
-    for row in csvreader:
-        rows.append(row)
-
-    csv_file.close()
+    return True
 
 
 def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+    parsed = minidom.parseString(rough_string)
+    return parsed.toprettyxml(indent="  ")
 
 
-def convert_to_eur(price, rate):
-    return str(round(float(price)/float(rate), 4))
+def convert_to_base(p, r):
+    return str(round(float(p)/float(r), 4))
 
 
-def sale(root, date, quantity, price):
+def convert_usd_to_eur(p, d):
+    return str(round(float(p) * float(find_usd_eur_rate(d)), 4))
+
+
+def find_usd_eur_rate(d):
+    while d not in usd_eur:
+        d = datetime.datetime.strptime(d, '%Y-%m-%d') - datetime.timedelta(1)
+        d = d.strftime('%Y-%m-%d')
+    return usd_eur[d]
+
+
+def sale(root, d, q, p):
     child = SubElement(root, 'Sale')
     s_child = SubElement(child, 'F6')
-    s_child.text = date
+    s_child.text = d
     s_child = SubElement(child, 'F7')
-    s_child.text = quantity
+    s_child.text = q
     s_child = SubElement(child, 'F9')
-    s_child.text = price
+    s_child.text = p
     s_child = SubElement(child, 'F10')
     s_child.text = 'true'
 
 
-def purchase(root, date, quantity, price):
+def purchase(root, d, q, p):
     child = SubElement(root, 'Purchase')
     s_child = SubElement(child, 'F1')
-    s_child.text = date
+    s_child.text = d
     s_child = SubElement(child, 'F2')
     s_child.text = 'B'
     s_child = SubElement(child, 'F3')
-    s_child.text = quantity
+    s_child.text = q
     s_child = SubElement(child, 'F4')
-    s_child.text = price
+    s_child.text = p
 
 
-def kdvp(root):
+def KDVP(root):
     top = SubElement(root, 'KDVP')
     child = SubElement(top, 'DocumentWorkflowID')
     child.text = "O"
@@ -93,12 +117,12 @@ def kdvp(root):
     child.text = "your-email@should-go.here"
 
 
-def kdvp_item(root, ticker):
+def KVDP_item(root, t):
     child = SubElement(root, 'KDVPItem')
     s_child = SubElement(child, 'InventoryListType')
     s_child.text = 'PLVP'
     s_child = SubElement(child, 'Name')
-    s_child.text = ticker
+    s_child.text = t
     s_child = SubElement(child, 'HasForeignTax')
     s_child.text = 'false'
     s_child = SubElement(child, 'HasLossTransfer')
@@ -109,7 +133,7 @@ def kdvp_item(root, ticker):
     s_child.text = 'false'
     s_child = SubElement(child, 'Securities')
     ss_child = SubElement(s_child, 'Code')
-    ss_child.text = ticker
+    ss_child.text = t
     ss_child = SubElement(s_child, 'IsFond')
     ss_child.text = 'false'
     ss_child = SubElement(s_child, 'Row')
@@ -137,13 +161,54 @@ def header(root):
     ss_child.text = "1995-12-31"
 
 
-if __name__ == '__main__':
-    files = get_files()
+def read_input_file(name):
+    csv_file = open("input/"+name)
+    csvreader = csv.reader(csv_file)
 
+    if not validate_header(next(csvreader)):
+        print('CSV header is invalid')
+        exit(0)
+
+    global rows
+    for r in csvreader:
+        rows.append(r)
+
+    csv_file.close()
+
+
+def load_input_files():
+    files = get_files("input/")
     for file in files:
         if file == '.gitkeep':
             continue
-        read_files(file)
+        read_input_file(file)
+
+
+def read_rate_file(name):
+    csv_file = open("rate/"+name)
+    csvreader = csv.reader(csv_file)
+
+    next(csvreader)
+
+    global usd_eur
+    for r in csvreader:
+        usd_eur[r[0]] = r[1]
+
+    csv_file.close()
+
+
+def load_usd_eur_rates():
+    files = get_files("rate/")
+    for file in files:
+        if file == '.gitkeep':
+            continue
+        read_rate_file(file)
+
+
+if __name__ == '__main__':
+    load_input_files()
+    load_usd_eur_rates()
+    print('Base currency: ' + base_currency)
 
     name_space = {
         "xmlns": "http://edavki.durs.si/Documents/Schemas/Doh_KDVP_9.xsd",
@@ -157,23 +222,37 @@ if __name__ == '__main__':
     body = SubElement(envelope, 'body')
     SubElement(body, 'edp:bodyContent')
     doh = SubElement(body, 'Doh_KDVP')
-    kdvp(doh)
+    KDVP(doh)
 
     for row in rows:
-        if row[0].split()[1] != 'buy' and row[0].split()[1] != 'sell':
+        action = row[0].split()[1]
+        if action != 'buy' and action != 'sell':
             continue
 
         date = row[1].split()[0]
+        price = row[6]
+        currency = row[7]
+        rate = row[8]
+
+        if currency == 'EUR':
+            calculated_price = price
+        elif base_currency == 'EUR':
+            calculated_price = convert_to_base(price, rate)
+        elif base_currency == 'USD':
+            calculated_price = convert_usd_to_eur(convert_to_base(price, rate), date)
+        else:
+            calculated_price = 0
+            print('Unsupported base currency: ' + base_currency)
+            exit(0)
+
         ticker = row[3]
         quantity = str(round(float(row[5]), 4))
-        price = convert_to_eur(row[6], row[8])
+        item = KVDP_item(doh, ticker)
 
-        item = kdvp_item(doh, ticker)
-
-        if row[0].split()[1] == 'buy':
-            purchase(item, date, quantity, price)
-        elif row[0].split()[1] == 'sell':
-            sale(item, date, quantity, price)
+        if action == 'buy':
+            purchase(item, date, quantity, calculated_price)
+        elif action == 'sell':
+            sale(item, date, quantity, calculated_price)
 
         f8 = SubElement(item, 'F8')
         f8.text = '0.0000'
