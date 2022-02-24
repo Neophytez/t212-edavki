@@ -231,8 +231,6 @@ if __name__ == '__main__':
         if action not in supported_actions:
             continue
 
-        print("dela")
-
         date = row[1].split()[0]
         price = row[6]
         currency = row[7]
