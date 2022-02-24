@@ -225,8 +225,9 @@ if __name__ == '__main__':
     KDVP(doh)
 
     for row in rows:
-        action = row[0].split()[1]
-        if action != 'buy' and action != 'sell':
+        action = row[0]
+        supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
+        if action not in supported_actions:
             continue
 
         date = row[1].split()[0]
