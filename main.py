@@ -227,8 +227,11 @@ if __name__ == '__main__':
     for row in rows:
         action = row[0]
         supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
+
         if action not in supported_actions:
             continue
+
+        print("dela")
 
         date = row[1].split()[0]
         price = row[6]
@@ -249,6 +252,8 @@ if __name__ == '__main__':
         ticker = row[3]
         quantity = str(round(float(row[5]), 4))
         item = KVDP_item(doh, ticker)
+
+        action = action.split()[1]
 
         if action == 'buy':
             purchase(item, date, quantity, calculated_price)
