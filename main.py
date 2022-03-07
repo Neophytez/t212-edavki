@@ -179,7 +179,7 @@ def read_input_file(name):
 def load_input_files():
     files = get_files("input/")
     for file in files:
-        if file == '.gitkeep':
+        if not file.endswith(".csv"):
             continue
         read_input_file(file)
 
@@ -200,7 +200,7 @@ def read_rate_file(name):
 def load_usd_eur_rates():
     files = get_files("rate/")
     for file in files:
-        if file == '.gitkeep':
+        if not file.endswith(".csv"):
             continue
         read_rate_file(file)
 
