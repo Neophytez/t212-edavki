@@ -179,7 +179,7 @@ def read_input_file(name):
 def load_input_files():
     files = get_files("input/")
     for file in files:
-        if file == '.gitkeep':
+        if file == '.gitkeep' or file == '.DS_Store':
             continue
         read_input_file(file)
 
