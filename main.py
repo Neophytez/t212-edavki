@@ -20,6 +20,9 @@ def get_files(folder):
     return os.listdir(folder)
 
 
+# 2021: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Result (EUR),Total (EUR),Charge amount (EUR),Notes,ID
+# 2022: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Total (EUR),Withholding tax,Currency (Withholding tax),Charge amount (EUR),Notes,ID,Currency conversion fee (EUR)
+
 def validate_header(h):
     if h[0] != 'Action':
         return False
@@ -34,8 +37,6 @@ def validate_header(h):
     if h[7] != 'Currency (Price / share)':
         return False
     if h[8] != 'Exchange rate':
-        return False
-    if h[9].split()[0] != 'Result':
         return False
 
     global base_currency
@@ -94,11 +95,11 @@ def KDVP(root):
     child = SubElement(top, 'DocumentWorkflowID')
     child.text = "O"
     child = SubElement(top, 'Year')
-    child.text = "2021"
+    child.text = "2022"
     child = SubElement(top, 'PeriodStart')
-    child.text = "2021-01-01"
+    child.text = "2022-01-01"
     child = SubElement(top, 'PeriodEnd')
-    child.text = "2021-12-31"
+    child.text = "2022-12-31"
     child = SubElement(top, 'IsResident')
     child.text = "true"
     child = SubElement(top, 'TelephoneNumber')
