@@ -1,17 +1,24 @@
 # Trading212 CSV to eDavki XML
 
 ## OBVESTILO: Z UPORABO SKRIPTE SOGLAŠAŠ, DA ZA MOREBITNE NAPAKE PRI VNOSU ODGOVARJAŠ SAM! PO UVOZU JE POTREBNO ROČNO PREGLEDATI VSE VNOSE!
-
+---
+### POSODOBLJENO 10.02.2023:
+#### - podpira nov Trading212 format
+#### - tečajnica EBC Europa namesto Yahoo Finance
+---
 ## Kako deluje skripta?
 Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je base valuta (EUR, USD). Za vsako vrstico preveri, ali je market/limit buy/sell. Če ni, vrstico spusti. Če imamo T212 račun v base valuti EUR, je konverzija zelo preprosta, v primeru USD pa si skripta pomaga s podatki iz Yahoo Finance (dnevni tečaji so shranjeni v CSV datotekah znotraj mape "rate"), kjer najprej pretvori ceno v base USD, nato pa še v EUR. Na koncu dobimo XML datoteko, ki jo lahko uvozimo, ko ustvarimo nov Doh-KDVP dokument ("Uvoz popisnih listov").
+
+---
 
 ## Podpira:
 ### - Market/limit sell/buy
 ### - rate conversion v base EUR
-### - rate conversion iz base USD v EUR (podatke bere iz [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX))
+### ~~- rate conversion iz base USD v EUR (podatke bere iz [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX))~~
+### - rate conversion iz base USD v EUR (podatke bere iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml)) Posodobljeno: 10.02.2023 (rate podatki za obdobje 01.01.2020 - 30.12.2022)
 
 ### Dividende in ostale zadeve skripta ignorira.
-
+---
 ## Navodila za uporabo:
 Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downloads/windows/)
 
@@ -21,7 +28,7 @@ Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downl
 4. Poženemo skripto (python main.py)
 5. Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki
 6. V nasprotnem primeru je šlo nekaj narobe
-
+---
 ## Ti je skripta prišparala nekaj časa?
 Lahko mi častiš pivo.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HP6Z34ASADB4Y)
