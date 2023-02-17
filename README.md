@@ -1,25 +1,27 @@
 # Trading212 CSV to eDavki XML
 
-### OBVESTILO: Z UPORABO SKRIPTE SOGLAŠAŠ, DA ZA MOREBITNE NAPAKE PRI VNOSU ODGOVARJAŠ SAM! PO UVOZU JE POTREBNO ROČNO PREGLEDATI VSE VNOSE!
+### Izjava o omejitvi odgovornosti
+Skripta je pripomoček, ki nam pomaga pri generiranju XML datoteke za oddajo davčne napovedi. Po uvozu XML datoteke je potrebno ročno pregledati vse vnose. Z uporabo skripte sprejemaš vso odgovornost za kakršno koli izgubo ali škodo, ki bi lahko nastala zaradi morebitnih napak pri generaciji XML datoteke. Avtor te skripte ne sprejema nikakršne odgovornosti.
 
 ---
 
-### POSODOBLJENO 10.02.2023:
-#### - podpira nov Trading212 format
-#### - tečajnica EBC Europa namesto Yahoo Finance
+### Posodobitve
+#### 10.02.2023:
+- podpira nov Trading212 format
+- tečajnica EBC Europa namesto Yahoo Finance
 
 ---
 
 ### Kako deluje skripta?
-Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je base valuta (EUR, USD). Za vsako vrstico preveri, ali je market/limit buy/sell. Če ni, vrstico spusti. Če imamo T212 račun v base valuti EUR, je konverzija zelo preprosta, v primeru USD pa si skripta pomaga s podatki iz Yahoo Finance (dnevni tečaji so shranjeni v CSV datotekah znotraj mape "rate"), kjer najprej pretvori ceno v base USD, nato pa še v EUR. Na koncu dobimo XML datoteko, ki jo lahko uvozimo, ko ustvarimo nov Doh-KDVP dokument ("Uvoz popisnih listov").
+Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je "base" valuta (EUR, USD). Za vsako vrstico preveri, ali je: market buy, market sell, limit buy ali limit sell. V kolikor ni nič od tega, vrstico ignorira. Če imamo T212 račun v "base" valuti EUR, je konverzija zelo preprosta, v primeru, da je "base" valuta USD, si skripta pomaga s podatki iz ECB Europe (dnevni tečaji so shranjeni v CSV datoteki znotraj mape "rate"), kjer najprej pretvori ceno v "base" USD, nato pa še z uporabo tečajnice v EUR. Na koncu dobimo XML datoteko, ki jo lahko uvozimo, ko ustvarimo nov Doh-KDVP dokument ("Uvoz popisnih listov").
 
 ---
 
 ### Podpira:
-#### - Market/limit sell/buy
+#### - Market sell, market buy, limit sell, limit buy
 #### - rate conversion v base EUR
 #### ~~- rate conversion iz base USD v EUR (podatke bere iz [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX))~~
-#### - rate conversion iz base USD v EUR (podatke bere iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml)) Posodobljeno: 10.02.2023 (rate podatki za obdobje 01.01.2020 - 30.12.2022)
+#### - rate conversion iz base USD v EUR (podatke bere iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
 
 #### Dividende in ostale zadeve skripta ignorira.
 
