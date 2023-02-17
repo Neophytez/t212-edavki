@@ -8,8 +8,9 @@ Skripta je pripomoček, ki nam pomaga pri generiranju XML datoteke za oddajo dav
 ### Posodobitve
 #### 10.02.2023:
 - podpira nov Trading212 format
-- tečajnica EBC Europa namesto Yahoo Finance
-
+- uporabljena tečajnica [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) namesto [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX)
+#### 17.02.2023:
+- ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
 ---
 
 ### Kako deluje skripta?
@@ -18,11 +19,10 @@ Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je "
 ---
 
 ### Podpira:
-#### - Market sell, market buy, limit sell, limit buy
+#### - market sell, market buy, limit sell, limit buy
 #### - rate conversion v base EUR
-#### ~~- rate conversion iz base USD v EUR (podatke bere iz [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX))~~
-#### - rate conversion iz base USD v EUR (podatke bere iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
-
+#### - rate conversion iz base USD v EUR (uporabljena tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
+#### - ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
 #### Dividende in ostale zadeve skripta ignorira.
 
 ---
