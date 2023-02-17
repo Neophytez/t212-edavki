@@ -7,6 +7,7 @@ import datetime
 
 usd_eur = {}
 rows = []
+tickers_with_sell = []
 base_currency = ''
 
 
@@ -206,6 +207,17 @@ def load_usd_eur_rates():
         read_rate_file(file)
 
 
+def find_tickers_with_sell():
+    sell_actions = {'Market sell', 'Limit sell'}
+
+    for row in rows:
+        action = row[0]
+
+        if action in sell_actions and action not in tickers_with_sell:
+            ticker = row[3]
+            tickers_with_sell.append(ticker)
+
+
 if __name__ == '__main__':
     load_input_files()
     load_usd_eur_rates()
@@ -225,11 +237,19 @@ if __name__ == '__main__':
     doh = SubElement(body, 'Doh_KDVP')
     KDVP(doh)
 
+    find_tickers_with_sell()
+
+    supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
+
     for row in rows:
         action = row[0]
-        supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
 
         if action not in supported_actions:
+            continue
+
+        ticker = row[3]
+
+        if ticker not in tickers_with_sell:
             continue
 
         date = row[1].split()[0]
@@ -248,7 +268,6 @@ if __name__ == '__main__':
             print('Unsupported base currency: ' + base_currency)
             exit(0)
 
-        ticker = row[3]
         quantity = str(round(float(row[5]), 4))
         item = KVDP_item(doh, ticker)
 
