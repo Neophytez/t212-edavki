@@ -173,6 +173,8 @@ def read_input_file(name):
 
     global rows
     for r in csvreader:
+        if not r:
+            continue
         rows.append(r)
 
     csv_file.close()
@@ -253,6 +255,7 @@ if __name__ == '__main__':
     for row in rows:
         if not row:
             continue
+        
         action = row[0]
 
         if action not in supported_actions:
