@@ -219,8 +219,9 @@ def find_tickers_with_sell():
     sell_actions = {'Market sell', 'Limit sell'}
 
     for row in rows:
+        if not row:
+            continue
         action = row[0]
-
         if action in sell_actions and action not in tickers_with_sell:
             ticker = row[3]
             tickers_with_sell.append(ticker)
@@ -250,6 +251,8 @@ if __name__ == '__main__':
     supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
 
     for row in rows:
+        if not row:
+            continue
         action = row[0]
 
         if action not in supported_actions:
