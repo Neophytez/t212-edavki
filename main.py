@@ -180,9 +180,17 @@ def read_input_file(name):
 
 def load_input_files():
     files = get_files("input/")
+    valid_files = []
+
     for file in files:
-        if not file.endswith(".csv"):
-            continue
+        if file.endswith(".csv"):
+            valid_files.append(file)
+
+    if not valid_files:
+        print('Input folder does not contain CSV files')
+        exit(0)
+
+    for file in valid_files:
         read_input_file(file)
 
 
