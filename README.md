@@ -31,14 +31,15 @@ Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je "
 ---
 
 ### Navodila za uporabo:
-Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downloads/windows/)
+Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downloads/windows/) ([navodila za namestitev](https://realpython.com/installing-python/)).
 
 1. Zgoraj pritisnemo zeleni gumb "Code" in izberemo "Download ZIP"
-2. Razširimo arhivsko datoteko
-3. V T212 izvozimo CSV datoteke in jih prestavimo v mapo "input" (program podpira več CSV datotek)
-4. Poženemo skripto (python main.py)
-5. Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki
-6. V nasprotnem primeru je šlo nekaj narobe
+2. Razširimo arhivsko datoteko in se prestavimo v mapo "t212-edavki-main"
+3. V Trading212 izvozimo CSV datoteke in jih skopiramo v mapo "t212-edavki-main/input" (program podpira več CSV datotek)
+4. Ko smo v mapi "t212-edavki-main", pritisnemo kombinacijo tipk ALT + F (odpre se meni). Pritisnemo S (odpre se podmeni). Pritisnemo R (odpre se PowerShell)
+5. Poženemo skripto z ukazom: python main.py
+7. Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki
+8. V nasprotnem primeru je šlo nekaj narobe
 
 ---
 
