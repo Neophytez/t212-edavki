@@ -38,8 +38,8 @@ Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downl
 3. V Trading212 izvozimo CSV datoteke in jih skopiramo v mapo "t212-edavki-main/input" (program podpira več CSV datotek)
 4. Ko smo v mapi "t212-edavki-main", pritisnemo kombinacijo tipk ALT + F (odpre se meni). Pritisnemo S (odpre se podmeni). Pritisnemo R (odpre se PowerShell)
 5. Poženemo skripto z ukazom: python main.py
-7. Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki
-8. V nasprotnem primeru je šlo nekaj narobe
+ 
+Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki. V nasprotnem primeru je šlo nekaj narobe.
 
 ---
 
