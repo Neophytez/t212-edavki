@@ -7,10 +7,13 @@ Skripta je pripomoček, ki nam pomaga pri generiranju XML datoteke za oddajo dav
 
 ### Posodobitve
 #### 10.02.2023:
-- podpira nov Trading212 format
+- popravek za nov header
 - uporabljena tečajnica [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) namesto [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX)
 #### 17.02.2023:
 - ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
+#### 26.02.2023:
+- popravek za nov format
+- dodani informativni izpisi
 ---
 
 ### Kako deluje skripta?
