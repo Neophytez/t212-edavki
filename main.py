@@ -9,6 +9,7 @@ usd_eur = {}
 rows = []
 tickers_with_sell = []
 base_currency = ''
+supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
 
 
 def save_file(data):
@@ -39,10 +40,8 @@ def validate_header(h):
         return False
     if h[8] != 'Exchange rate':
         return False
-
     global base_currency
     base_currency = h[9].split()[1].replace('(', '').replace(')', '')
-
     return True
 
 
@@ -165,47 +164,46 @@ def header(root):
 
 def read_input_file(name):
     csv_file = open("input/"+name)
-    csvreader = csv.reader(csv_file)
-
-    if not validate_header(next(csvreader)):
+    if not validate_header(csv_file.readline().split(",")):
         print('CSV header is invalid')
         exit(0)
-
+    global supported_actions
     global rows
-    for r in csvreader:
-        if not r:
+    for line in csv_file:
+        line = line.strip()
+        if not line:
             continue
-        rows.append(r)
-
+        if line.startswith('"') and line.endswith('"'):
+            line = line[1:-1].replace("\"\"", "\"")
+        csvreader = csv.reader([line])
+        line = next(csvreader)
+        if line[0] not in supported_actions:
+            continue
+        rows.append(line)
     csv_file.close()
 
 
 def load_input_files():
     files = get_files("input/")
     valid_files = []
-
     for file in files:
         if file.endswith(".csv"):
             valid_files.append(file)
-
     if not valid_files:
         print('Input folder does not contain CSV files')
         exit(0)
-
     for file in valid_files:
+        print("Parsing file:", file)
         read_input_file(file)
 
 
 def read_rate_file(name):
     csv_file = open("rate/"+name)
     csvreader = csv.reader(csv_file)
-
     next(csvreader)
-
     global usd_eur
     for r in csvreader:
         usd_eur[r[0]] = r[1]
-
     csv_file.close()
 
 
@@ -219,14 +217,9 @@ def load_usd_eur_rates():
 
 def find_tickers_with_sell():
     sell_actions = {'Market sell', 'Limit sell'}
-
-    for row in rows:
-        if not row:
-            continue
-        action = row[0]
-        if action in sell_actions and action not in tickers_with_sell:
-            ticker = row[3]
-            tickers_with_sell.append(ticker)
+    for r in rows:
+        if r[0] in sell_actions and r[0] not in tickers_with_sell:
+            tickers_with_sell.append(r[3])
 
 
 if __name__ == '__main__':
@@ -249,20 +242,14 @@ if __name__ == '__main__':
     KDVP(doh)
 
     find_tickers_with_sell()
-
-    supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
-
+    print("Tickers with sale:", ', '.join(tickers_with_sell))
+    count = 0
     for row in rows:
-        if not row:
-            continue
-        
         action = row[0]
-
         if action not in supported_actions:
             continue
 
         ticker = row[3]
-
         if ticker not in tickers_with_sell:
             continue
 
@@ -294,7 +281,8 @@ if __name__ == '__main__':
 
         f8 = SubElement(item, 'F8')
         f8.text = '0.0000'
+        count += 1
 
     save_file(prettify(envelope))
-
+    print('Count:', count)
     print('Your XML file is located inside output folder.')
