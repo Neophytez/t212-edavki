@@ -24,11 +24,11 @@ Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je "
 ---
 
 ### Podpira:
-#### - market sell, market buy, limit sell, limit buy
-#### - rate conversion v base EUR
-#### - rate conversion iz base USD v EUR (uporabljena tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
-#### - ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
-#### Dividende in ostale zadeve skripta ignorira.
+ - market sell, market buy, limit sell, limit buy
+ - rate conversion v base EUR
+ - rate conversion iz base USD v EUR (uporabljena tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
+ - ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
+Dividende in ostale zadeve skripta ignorira.
 
 ---
 
