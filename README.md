@@ -6,6 +6,8 @@ Skripta je pripomoček, ki nam pomaga pri generiranju XML datoteke za oddajo dav
 ---
 
 ### Posodobitve
+#### 13.10.2023:
+- popravek za nov header
 #### 10.02.2023:
 - popravek za nov header
 - uporabljena tečajnica [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) namesto [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX)
