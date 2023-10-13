@@ -24,6 +24,7 @@ def get_files(folder):
 
 # 2021: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Result (EUR),Total (EUR),Charge amount (EUR),Notes,ID
 # 2022: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Total (EUR),Withholding tax,Currency (Withholding tax),Charge amount (EUR),Notes,ID,Currency conversion fee (EUR)
+# 2023: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Result,Currency (Result),Total,Currency (Total),ID
 
 def validate_header(h):
     if h[0] != 'Action':
@@ -40,8 +41,16 @@ def validate_header(h):
         return False
     if h[8] != 'Exchange rate':
         return False
+    if h[9].split()[0] != 'Result':
+        return False
+
     global base_currency
-    base_currency = h[9].split()[1].replace('(', '').replace(')', '')
+    result = h[9].split()
+    if len(result) > 1:
+        base_currency = result[1].replace('(', '').replace(')', '')
+    else:
+        base_currency = 'EUR'
+
     return True
 
 
