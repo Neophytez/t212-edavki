@@ -50,4 +50,4 @@ Lahko mi častiš pivo.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HP6Z34ASADB4Y)
 
 ### Ti skripta ne deluje?
-V primeru, da ti skripta ne deluje, lahko odpreš "New issue" (klikni zgoraj "Issues" in nato zeleni gumb desno) ali pa mi pišeš na [mail](mailto:lenar.rahmatullin@gmail.com).
+V primeru, da ti skripta ne deluje, lahko odpreš "New issue" (klikni zgoraj "Issues" in nato zeleni gumb desno). Na e-maile ne odgovarjam.
