@@ -1,53 +1,95 @@
 # Trading212 CSV to eDavki XML
 
-### Izjava o omejitvi odgovornosti
-Skripta je pripomoček, ki nam pomaga pri generiranju XML datoteke za oddajo davčne napovedi. Po uvozu XML datoteke je potrebno ročno pregledati vse vnose. Z uporabo skripte sprejemaš vso odgovornost za kakršno koli izgubo ali škodo, ki bi lahko nastala zaradi morebitnih napak pri generaciji XML datoteke. Avtor te skripte ne sprejema nikakršne odgovornosti.
+Skripta za pretvorbo Trading212 CSV datotek v eDavki XML pripomore k hitrejšemu in bolj organiziranemu ustvarjanju XML datotek za oddajo davčne napovedi.
 
----
+## Izjava o omejitvi odgovornosti
 
-### Posodobitve
-#### 13.10.2023:
-- popravek za nov header
-#### 10.02.2023:
-- popravek za nov header
-- uporabljena tečajnica [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) namesto [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX)
-#### 17.02.2023:
-- ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
-#### 26.02.2023:
-- popravek za nov format
-- dodani informativni izpisi
----
+**OPOZORILO:**  
+Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddajo davčne napovedi. Pred oddajo XML datoteke **obvezno ročno preveri** vse vnose. Z uporabo skripte sprejemaš popolno odgovornost za morebitne napake, izgube ali škodo, ki bi nastale zaradi nepravilno generiranih podatkov. Avtor skripte ne sprejema odgovornosti za kakršnekoli posledice.
 
-### Kako deluje skripta?
-Skripta prebere vse vrstice CSV datotek. Na podlagi glave prepozna, kakšna je "base" valuta (EUR, USD). Za vsako vrstico preveri, ali je: market buy, market sell, limit buy ali limit sell. V kolikor ni nič od tega, vrstico ignorira. Če imamo T212 račun v "base" valuti EUR, je konverzija zelo preprosta, v primeru, da je "base" valuta USD, si skripta pomaga s podatki iz ECB Europe (dnevni tečaji so shranjeni v CSV datoteki znotraj mape "rate"), kjer najprej pretvori ceno v "base" USD, nato pa še z uporabo tečajnice v EUR. Na koncu dobimo XML datoteko, ki jo lahko uvozimo, ko ustvarimo nov Doh-KDVP dokument ("Uvoz popisnih listov").
+## Posodobitve
 
----
+- **11.01.2025:**  
+  - Popravek za nov header.
+- **06.01.2025:**  
+  - Posodobljena tečajnica USD/EUR 1999-2024.
+- **13.10.2023:**  
+  - Popravek za nov header.
+- **10.02.2023:**  
+  - Popravek za nov header.
+  - Uporabljena tečajnica [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) namesto [Yahoo Finance](https://finance.yahoo.com/quote/EUR%3DX/history?p=EUR%3DX).
+- **17.02.2023:**  
+  - Ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell).
+- **26.02.2023:**  
+  - Popravek za nov format.
+  - Dodani informativni izpisi.
 
-### Podpira:
- - market sell, market buy, limit sell, limit buy
- - rate conversion v base EUR
- - rate conversion iz base USD v EUR (uporabljena tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml))
- - ignoriranje tickerjev brez odsvojitve (prodaje: market sell in limit sell)
-Dividende in ostale zadeve skripta ignorira.
+## Kako deluje skripta?
 
----
+1. **Uvoz CSV datotek:**  
+   Skripta prebere vse vrstice CSV datotek, pridobljenih iz Trading212.
+   
+2. **Določitev osnovne valute:**  
+   Na podlagi glave CSV datoteke skripta prepozna "base" valuto (EUR ali USD).
 
-### Navodila za uporabo:
-Pred zagonom skripte je potrebno naložiti [Phyton](https://www.python.org/downloads/windows/) ([navodila za namestitev](https://realpython.com/installing-python/)).
+3. **Identifikacija transakcij:**  
+   Za vsako vrstico preveri, ali gre za eno od naslednjih vrstic:
+   - **market buy**
+   - **market sell**
+   - **limit buy**
+   - **limit sell**  
+   Vrstice, ki ne ustrezajo tem pogojem, se ignorirajo.
 
-1. Zgoraj pritisnemo zeleni gumb "Code" in izberemo "Download ZIP"
-2. Razširimo arhivsko datoteko in se prestavimo v mapo "t212-edavki-main"
-3. V Trading212 izvozimo CSV datoteke in jih skopiramo v mapo "t212-edavki-main/input" (program podpira več CSV datotek)
-4. Ko smo v mapi "t212-edavki-main", pritisnemo kombinacijo tipk ALT + F (odpre se meni). Pritisnemo S (odpre se podmeni). Pritisnemo R (odpre se PowerShell)
-5. Poženemo skripto z ukazom: python main.py
+4. **Pretvorba valut:**  
+   - Če je Trading212 račun v osnovni valuti **EUR**, je pretvorba preprosta.
+   - Če je osnovna valuta **USD**, skripta uporabi dnevne tečaje iz datoteke v mapi `rate` (tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml)). Najprej se cena pretvori v USD, nato pa v EUR.
+   
+5. **Generiranje XML:**  
+   Na koncu se iz dobljenih podatkov ustvari XML datoteka, pripravljena za uvoz v nov Doh-KDVP dokument ("Uvoz popisnih listov") v eDavkih.
+
+## Podprte funkcionalnosti
+
+- **Podprte transakcije:**  
+  - *market sell*, *market buy*, *limit sell*, *limit buy*
+- **Pretvorba valut:**  
+  - Pretvorba v osnovno valuto (EUR).
+  - Pretvorba iz USD v EUR (uporabljena tečajnica iz [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml)).
+- **Ignoriranje:**  
+  - Tickerji brez odsvojitve (prodaje: *market sell* in *limit sell*).
+- **Opombe:**  
+  - Dividende in druge vrste transakcij se ne upoštevajo.
+
+## Navodila za uporabo
+
+1. **Namestitev Python-a:**  
+   Pred zagonom skripte naloži [Python](https://www.python.org/downloads/windows/) (sledi [navodilom za namestitev](https://realpython.com/installing-python/)).
+
+2. **Prenos repozitorija:**  
+   - Klikni gumb **"Code"** in izberi **"Download ZIP"**.
+   - Razširi arhivsko datoteko in se prestavi v mapo `t212-edavki-main`.
+
+3. **Priprava CSV datotek:**  
+   - Iz Trading212 izvozi CSV datoteke.
+   - Kopiraj jih v mapo `t212-edavki-main/input` (skripta podpira več CSV datotek hkrati).
+
+4. **Zagon skripte:**  
+   - Odpri mapo `t212-edavki-main`.
+   - Pritisni kombinacijo tipk **ALT + F** (odpre se meni), nato **S** (odpre se podmeni) in nato **R** (odpre se PowerShell).
+   - Poženi skripto z ukazom:
+
+     ```bash
+     python main.py
+     ```
+
+5. **Preverjanje rezultata:** 
  
-Če se izpiše: "Your XML file is located inside output folder.", smo uspešno zgenerirali XML datoteko, pripravljeno na uvoz v eDavki. V nasprotnem primeru je šlo nekaj narobe.
+Če se izpiše sporočilo: "Your XML file is located inside output folder.", si uspešno ustvaril XML datoteko, pripravljeno na uvoz v eDavki. Če se pojavi kakšna napaka, preveri sporočila v terminalu.
 
----
+## Podpri delo
 
-### Ti je skripta prišparala nekaj časa?
-Lahko mi častiš pivo.
+Če ti skripta prihrani čas in trud, mi lahko častiš pivo.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HP6Z34ASADB4Y)
 
-### Ti skripta ne deluje?
-V primeru, da ti skripta ne deluje, lahko odpreš "New issue" (klikni zgoraj "Issues" in nato zeleni gumb desno). Na e-maile ne odgovarjam.
+## Prišlo do težav?
+
+Če skripta ne deluje, odpri **"New issue"** (klikni na zavihek **"Issues"** in nato zeleni gumb desno). Na e-pošto ne odgovarjam, zato prosim, da težave prijaviš preko GitHub issue sistema.
