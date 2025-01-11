@@ -1,297 +1,287 @@
+#!/usr/bin/env python3
 import csv
 import os
-from xml.etree.ElementTree import Element, SubElement
-from xml.etree import ElementTree
-from xml.dom import minidom
 import datetime
+from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.dom import minidom
 
-usd_eur = {}
-rows = []
-tickers_with_sell = []
-base_currency = ''
-supported_actions = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
-
-
-def save_file(data):
-    f = open("output/output.xml", "w")
-    f.write(data)
-    f.close()
-
+# Supported actions
+SUPPORTED_ACTIONS = {'Market sell', 'Market buy', 'Limit sell', 'Limit buy'}
 
 def get_files(folder):
-    return os.listdir(folder)
+    """Returns a list of files in the specified folder."""
+    if not os.path.exists(folder):
+        raise FileNotFoundError(f"Folder '{folder}' does not exist.")
+    return [file for file in os.listdir(folder) if os.path.isfile(os.path.join(folder, file))]
 
-
-# 2021: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Result (EUR),Total (EUR),Charge amount (EUR),Notes,ID
-# 2022: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Total (EUR),Withholding tax,Currency (Withholding tax),Charge amount (EUR),Notes,ID,Currency conversion fee (EUR)
-# 2023: Action,Time,ISIN,Ticker,Name,No. of shares,Price / share,Currency (Price / share),Exchange rate,Result,Currency (Result),Total,Currency (Total),ID
-
-def validate_header(h):
-    if h[0] != 'Action':
-        return False
-    if h[1] != 'Time':
-        return False
-    if h[3] != 'Ticker':
-        return False
-    if h[5] != 'No. of shares':
-        return False
-    if h[6] != 'Price / share':
-        return False
-    if h[7] != 'Currency (Price / share)':
-        return False
-    if h[8] != 'Exchange rate':
-        return False
-    if h[9].split()[0] != 'Result':
-        return False
-
-    global base_currency
-    result = h[9].split()
-    if len(result) > 1:
-        base_currency = result[1].replace('(', '').replace(')', '')
-    else:
-        base_currency = 'EUR'
-
-    return True
-
+def save_file(data, output_folder="output"):
+    """Saves XML data to a file in the output folder."""
+    os.makedirs(output_folder, exist_ok=True)
+    path = os.path.join(output_folder, "output.xml")
+    try:
+        with open(path, "w") as f:
+            f.write(data)
+        print("XML file saved successfully at", path)
+    except Exception as e:
+        raise IOError(f"Failed to save XML file. Details: {e}")
 
 def prettify(elem):
-    rough_string = ElementTree.tostring(elem, 'utf-8')
+    """Return a pretty-printed XML string for the Element."""
+    rough_string = tostring(elem, 'utf-8')
     parsed = minidom.parseString(rough_string)
     return parsed.toprettyxml(indent="  ")
 
+def convert_to_base(price, rate):
+    """Converts the given price to the base currency using the exchange rate."""
+    return str(round(float(price) / float(rate), 4))
 
-def convert_to_base(p, r):
-    return str(round(float(p)/float(r), 4))
+def find_usd_eur_rate(date, usd_eur):
+    """Finds the USD/EUR exchange rate for a given date.
+       If an exact date is not found, the function searches backwards one day at a time."""
+    dt = date
+    while dt not in usd_eur:
+        dt_dt = datetime.datetime.strptime(dt, '%Y-%m-%d') - datetime.timedelta(days=1)
+        dt = dt_dt.strftime('%Y-%m-%d')
+    return usd_eur[dt]
 
+def convert_usd_to_eur(price, date, usd_eur):
+    """Converts price from USD to EUR using the exchange rate for the given date."""
+    rate = find_usd_eur_rate(date, usd_eur)
+    return str(round(float(price) * float(rate), 4))
 
-def convert_usd_to_eur(p, d):
-    return str(round(float(p) * float(find_usd_eur_rate(d)), 4))
+def sale(root, date, quantity, price):
+    """Adds a sale transaction to the XML structure."""
+    sale_elem = SubElement(root, 'Sale')
+    SubElement(sale_elem, 'F6').text = date
+    SubElement(sale_elem, 'F7').text = quantity
+    SubElement(sale_elem, 'F9').text = price
+    SubElement(sale_elem, 'F10').text = 'true'
 
+def purchase(root, date, quantity, price):
+    """Adds a purchase transaction to the XML structure."""
+    purchase_elem = SubElement(root, 'Purchase')
+    SubElement(purchase_elem, 'F1').text = date
+    SubElement(purchase_elem, 'F2').text = 'B'
+    SubElement(purchase_elem, 'F3').text = quantity
+    SubElement(purchase_elem, 'F4').text = price
 
-def find_usd_eur_rate(d):
-    while d not in usd_eur:
-        d = datetime.datetime.strptime(d, '%Y-%m-%d') - datetime.timedelta(1)
-        d = d.strftime('%Y-%m-%d')
-    return usd_eur[d]
+def KDVP_metadata(root):
+    """Adds KDVP metadata to the XML structure."""
+    kdvp_elem = SubElement(root, 'KDVP')
+    SubElement(kdvp_elem, 'DocumentWorkflowID').text = "O"
+    SubElement(kdvp_elem, 'Year').text = "2024"
+    SubElement(kdvp_elem, 'PeriodStart').text = "2024-01-01"
+    SubElement(kdvp_elem, 'PeriodEnd').text = "2024-12-31"
+    SubElement(kdvp_elem, 'IsResident').text = "true"
+    SubElement(kdvp_elem, 'TelephoneNumber').text = "069240240"
+    SubElement(kdvp_elem, 'SecurityCount').text = "0"
+    SubElement(kdvp_elem, 'SecurityShortCount').text = "0"
+    SubElement(kdvp_elem, 'SecurityWithContractCount').text = "0"
+    SubElement(kdvp_elem, 'SecurityWithContractShortCount').text = "0"
+    SubElement(kdvp_elem, 'ShareCount').text = "0"
+    SubElement(kdvp_elem, 'Email').text = "your-email@should-go.here"
 
+def KVDP_item(root, ticker):
+    """Adds a KDVP item for a specific ticker."""
+    item_elem = SubElement(root, 'KDVPItem')
+    SubElement(item_elem, 'InventoryListType').text = 'PLVP'
+    SubElement(item_elem, 'Name').text = ticker
+    SubElement(item_elem, 'HasForeignTax').text = 'false'
+    SubElement(item_elem, 'HasLossTransfer').text = 'true'
+    SubElement(item_elem, 'ForeignTransfer').text = 'false'
+    SubElement(item_elem, 'TaxDecreaseConformance').text = 'false'
+    securities = SubElement(item_elem, 'Securities')
+    SubElement(securities, 'Code').text = ticker
+    SubElement(securities, 'IsFond').text = 'false'
+    row_elem = SubElement(securities, 'Row')
+    SubElement(row_elem, 'ID').text = '0'
+    return securities
 
-def sale(root, d, q, p):
-    child = SubElement(root, 'Sale')
-    s_child = SubElement(child, 'F6')
-    s_child.text = d
-    s_child = SubElement(child, 'F7')
-    s_child.text = q
-    s_child = SubElement(child, 'F9')
-    s_child.text = p
-    s_child = SubElement(child, 'F10')
-    s_child.text = 'true'
+def header_xml(root):
+    """Adds the header to the XML structure."""
+    header_elem = SubElement(root, 'edp:Header')
+    taxpayer = SubElement(header_elem, 'edp:taxpayer')
+    SubElement(taxpayer, 'edp:taxNumber').text = "12345678"
+    SubElement(taxpayer, 'edp:taxpayerType').text = "FO"
+    SubElement(taxpayer, 'edp:name').text = "Full name"
+    SubElement(taxpayer, 'edp:address1').text = "Address"
+    SubElement(taxpayer, 'edp:city').text = "City"
+    SubElement(taxpayer, 'edp:postNumber').text = "1000"
+    SubElement(taxpayer, 'edp:birthDate').text = "1995-12-31"
 
+def validate_header(header, state):
+    """Validates that the CSV header matches expected columns.
+       Also updates base_currency in state based on header data."""
+    # 0: Action, 1: Time, 3: Ticker, 7: No. of shares, 8: Price / share, 9: Currency (Price / share), 10: Exchange rate, 11: starts with Result
+    expected = [(0, 'Action'), (1, 'Time'), (3, 'Ticker'), (7, 'No. of shares'),
+                (8, 'Price / share'), (9, 'Currency (Price / share)'), (10, 'Exchange rate')]
+    for index, text in expected:
+        if index >= len(header) or header[index] != text:
+            return False
+    if len(header) <= 11 or not header[11].startswith('Result'):
+        return False
 
-def purchase(root, d, q, p):
-    child = SubElement(root, 'Purchase')
-    s_child = SubElement(child, 'F1')
-    s_child.text = d
-    s_child = SubElement(child, 'F2')
-    s_child.text = 'B'
-    s_child = SubElement(child, 'F3')
-    s_child.text = q
-    s_child = SubElement(child, 'F4')
-    s_child.text = p
+    # Set the base currency. If header[11] is like "Result (XYZ)", use XYZ.
+    parts = header[11].split()
+    if len(parts) > 1:
+        state['base_currency'] = parts[1].strip("()")
+    else:
+        state['base_currency'] = 'EUR'
+    return True
 
+def read_input_file(filename, input_folder, state):
+    """Reads a CSV file and processes its rows."""
+    path = os.path.join(input_folder, filename)
+    try:
+        with open(path, 'r', newline='') as csv_file:
+            reader = csv.reader(csv_file)
+            header_row = next(reader)
+            if not validate_header(header_row, state):
+                raise ValueError(f"CSV header in {filename} is invalid.")
+            for row in reader:
+                if row and row[0] in SUPPORTED_ACTIONS:
+                    state['rows'].append(row)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File '{filename}' not found in folder '{input_folder}'.")
 
-def KDVP(root):
-    top = SubElement(root, 'KDVP')
-    child = SubElement(top, 'DocumentWorkflowID')
-    child.text = "O"
-    child = SubElement(top, 'Year')
-    child.text = "2022"
-    child = SubElement(top, 'PeriodStart')
-    child.text = "2022-01-01"
-    child = SubElement(top, 'PeriodEnd')
-    child.text = "2022-12-31"
-    child = SubElement(top, 'IsResident')
-    child.text = "true"
-    child = SubElement(top, 'TelephoneNumber')
-    child.text = "069240240"
-    child = SubElement(top, 'SecurityCount')
-    child.text = "0"
-    child = SubElement(top, 'SecurityShortCount')
-    child.text = "0"
-    child = SubElement(top, 'SecurityWithContractCount')
-    child.text = "0"
-    child = SubElement(top, 'SecurityWithContractShortCount')
-    child.text = "0"
-    child = SubElement(top, 'ShareCount')
-    child.text = "0"
-    child = SubElement(top, 'Email')
-    child.text = "your-email@should-go.here"
+def load_input_files(input_folder, state):
+    """Loads and reads all CSV input files from the specified folder."""
+    input_files = [file for file in get_files(input_folder) if file.endswith(".csv")]
+    if not input_files:
+        raise FileNotFoundError(f'No CSV files found in {input_folder} folder.')
+    for filename in input_files:
+        print(f"Parsing file: {filename}")
+        read_input_file(filename, input_folder, state)
 
+def read_rate_file(filename, rate_folder, usd_eur):
+    """Reads a single exchange rate CSV file."""
+    path = os.path.join(rate_folder, filename)
+    try:
+        with open(path, 'r', newline='') as csv_file:
+            reader = csv.reader(csv_file)
+            next(reader)  # Skip header
+            for row in reader:
+                if row:
+                    usd_eur[row[0]] = row[1]
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Rate file '{filename}' not found in folder '{rate_folder}'.")
+    except Exception as e:
+        raise IOError(f"Unable to read the rate file '{filename}'. Details: {e}")
 
-def KVDP_item(root, t):
-    child = SubElement(root, 'KDVPItem')
-    s_child = SubElement(child, 'InventoryListType')
-    s_child.text = 'PLVP'
-    s_child = SubElement(child, 'Name')
-    s_child.text = t
-    s_child = SubElement(child, 'HasForeignTax')
-    s_child.text = 'false'
-    s_child = SubElement(child, 'HasLossTransfer')
-    s_child.text = 'true'
-    s_child = SubElement(child, 'ForeignTransfer')
-    s_child.text = 'false'
-    s_child = SubElement(child, 'TaxDecreaseConformance')
-    s_child.text = 'false'
-    s_child = SubElement(child, 'Securities')
-    ss_child = SubElement(s_child, 'Code')
-    ss_child.text = t
-    ss_child = SubElement(s_child, 'IsFond')
-    ss_child.text = 'false'
-    ss_child = SubElement(s_child, 'Row')
-    sss_child = SubElement(ss_child, 'ID')
-    sss_child.text = '0'
-    return ss_child
+def load_usd_eur_rates(rate_folder, state):
+    """Loads all USD/EUR exchange rate CSV files from the specified rate folder."""
+    usd_eur = state['usd_eur']
+    rate_files = [file for file in get_files(rate_folder) if file.endswith(".csv")]
+    if not rate_files:
+        raise FileNotFoundError(f'No exchange rate CSV files found in {rate_folder} folder.')
+    for filename in rate_files:
+        read_rate_file(filename, rate_folder, usd_eur)
 
-
-def header(root):
-    child = SubElement(root, 'edp:Header')
-    s_child = SubElement(child, 'edp:taxpayer')
-    ss_child = SubElement(s_child, 'edp:taxNumber')
-    ss_child.text = "12345678"
-    ss_child = SubElement(s_child, 'edp:taxpayerType')
-    ss_child.text = "FO"
-    ss_child = SubElement(s_child, 'edp:name')
-    ss_child.text = "Full name"
-    ss_child = SubElement(s_child, 'edp:address1')
-    ss_child.text = "Address"
-    ss_child = SubElement(s_child, 'edp:city')
-    ss_child.text = "City"
-    ss_child = SubElement(s_child, 'edp:postNumber')
-    ss_child.text = "1000"
-    ss_child = SubElement(s_child, 'edp:birthDate')
-    ss_child.text = "1995-12-31"
-
-
-def read_input_file(name):
-    csv_file = open("input/"+name)
-    if not validate_header(csv_file.readline().split(",")):
-        print('CSV header is invalid')
-        exit(0)
-    global supported_actions
-    global rows
-    for line in csv_file:
-        line = line.strip()
-        if not line:
-            continue
-        if line.startswith('"') and line.endswith('"'):
-            line = line[1:-1].replace("\"\"", "\"")
-        csvreader = csv.reader([line])
-        line = next(csvreader)
-        if line[0] not in supported_actions:
-            continue
-        rows.append(line)
-    csv_file.close()
-
-
-def load_input_files():
-    files = get_files("input/")
-    valid_files = []
-    for file in files:
-        if file.endswith(".csv"):
-            valid_files.append(file)
-    if not valid_files:
-        print('Input folder does not contain CSV files')
-        exit(0)
-    for file in valid_files:
-        print("Parsing file:", file)
-        read_input_file(file)
-
-
-def read_rate_file(name):
-    csv_file = open("rate/"+name)
-    csvreader = csv.reader(csv_file)
-    next(csvreader)
-    global usd_eur
-    for r in csvreader:
-        usd_eur[r[0]] = r[1]
-    csv_file.close()
-
-
-def load_usd_eur_rates():
-    files = get_files("rate/")
-    for file in files:
-        if not file.endswith(".csv"):
-            continue
-        read_rate_file(file)
-
-
-def find_tickers_with_sell():
+def find_tickers_with_sell(state):
+    """Identifies all tickers that have sell actions."""
     sell_actions = {'Market sell', 'Limit sell'}
-    for r in rows:
-        if r[0] in sell_actions and r[0] not in tickers_with_sell:
-            tickers_with_sell.append(r[3])
+    tickers = state['tickers_with_sell']
+    for row in state['rows']:
+        if row[0] in sell_actions and row[3] not in tickers:
+            tickers.append(row[3])
 
+def process_transactions(state):
+    """Processes transactions and builds the XML structure.
+       Returns the XML element and a count of processed items."""
+    count = 0
 
-if __name__ == '__main__':
-    load_input_files()
-    load_usd_eur_rates()
-    print('Base currency: ' + base_currency)
-
-    name_space = {
+    # Set up XML structure with required namespaces.
+    ns = {
         "xmlns": "http://edavki.durs.si/Documents/Schemas/Doh_KDVP_9.xsd",
         "xmlns:edp": "http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd",
     }
-
-    envelope = Element('Envelope', name_space)
-    header(envelope)
+    envelope = Element('Envelope', ns)
+    header_xml(envelope)
     SubElement(envelope, 'edp:AttachmentList')
     SubElement(envelope, 'edp:Signatures')
     body = SubElement(envelope, 'body')
     SubElement(body, 'edp:bodyContent')
     doh = SubElement(body, 'Doh_KDVP')
-    KDVP(doh)
+    KDVP_metadata(doh)
 
-    find_tickers_with_sell()
-    print("Tickers with sale:", ', '.join(tickers_with_sell))
-    count = 0
-    for row in rows:
-        action = row[0]
-        if action not in supported_actions:
+    # Identify tickers with sell actions.
+    find_tickers_with_sell(state)
+    tickers = state['tickers_with_sell']
+    print("Tickers with sale:", ', '.join(tickers) if tickers else '/')
+
+    # 0: Action, 1: Time, 3: Ticker, 7: No. of shares, 8: Price / share, 9: Currency (Price / share), 10: Exchange rate, 11: starts with Result
+    for row in state['rows']:
+        action_full = row[0]
+        # Process only rows with supported actions and tickers with sell actions.
+        if action_full not in SUPPORTED_ACTIONS:
             continue
 
         ticker = row[3]
-        if ticker not in tickers_with_sell:
+        if ticker not in state['tickers_with_sell']:
             continue
 
         date = row[1].split()[0]
-        price = row[6]
-        currency = row[7]
-        rate = row[8]
+        price = row[8]
+        currency = row[9]
+        rate = row[10]
+        base_currency = state['base_currency']
+        usd_eur = state['usd_eur']
 
         if currency == 'EUR':
             calculated_price = price
         elif base_currency == 'EUR':
             calculated_price = convert_to_base(price, rate)
         elif base_currency == 'USD':
-            calculated_price = convert_usd_to_eur(convert_to_base(price, rate), date)
+            base_price = convert_to_base(price, rate)
+            calculated_price = convert_usd_to_eur(base_price, date, usd_eur)
         else:
-            calculated_price = 0
-            print('Unsupported base currency: ' + base_currency)
-            exit(0)
+            raise ValueError(f"Unsupported base currency: {base_currency}")
 
-        quantity = str(round(float(row[5]), 4))
+        quantity = str(round(float(row[7]), 4))
         item = KVDP_item(doh, ticker)
-
-        action = action.split()[1]
-
+        # Extract the buy/sell part from the action string (e.g., "Market sell" -> "sell")
+        action = action_full.split()[1].lower()
         if action == 'buy':
             purchase(item, date, quantity, calculated_price)
         elif action == 'sell':
             sale(item, date, quantity, calculated_price)
+        else:
+            # Skip unsupported actions
+            continue
 
+        # Add extra field F8
         f8 = SubElement(item, 'F8')
         f8.text = '0.0000'
         count += 1
 
-    save_file(prettify(envelope))
+    return envelope, count
+
+def main():
+    # Shared state dictionary to hold parameters and data
+    state = {
+        'usd_eur': {},
+        'rows': [],
+        'tickers_with_sell': [],
+        'base_currency': 'EUR'
+    }
+    input_folder = "input"
+    rate_folder = "rate"
+    output_folder = "output"
+
+    # Load input CSV files and rate files.
+    load_input_files(input_folder, state)
+    load_usd_eur_rates(rate_folder, state)
+    print('Base currency:', state['base_currency'])
+
+    # Process transactions and build XML.
+    envelope, count = process_transactions(state)
+    xml_output = prettify(envelope)
+    save_file(xml_output, output_folder)
     print('Count:', count)
-    print('Your XML file is located inside output folder.')
+    print('Your XML file is located inside the output folder.')
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as err:
+        print("Error:", err)
