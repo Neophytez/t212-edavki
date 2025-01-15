@@ -19,7 +19,7 @@ def save_file(data, output_folder="output"):
     os.makedirs(output_folder, exist_ok=True)
     path = os.path.join(output_folder, "output.xml")
     try:
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(data)
         print("XML file saved successfully at", path)
     except Exception as e:
