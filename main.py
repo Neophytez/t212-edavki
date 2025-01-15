@@ -110,23 +110,35 @@ def header_xml(root):
     SubElement(taxpayer, 'edp:birthDate').text = "1995-12-31"
 
 def validate_header(header, state):
-    """Validates that the CSV header matches expected columns.
+    """Dynamically validates the CSV header by searching for relevant columns.
        Also updates base_currency in state based on header data."""
-    # 0: Action, 1: Time, 3: Ticker, 7: No. of shares, 8: Price / share, 9: Currency (Price / share), 10: Exchange rate, 11: starts with Result
-    expected = [(0, 'Action'), (1, 'Time'), (3, 'Ticker'), (7, 'No. of shares'),
-                (8, 'Price / share'), (9, 'Currency (Price / share)'), (10, 'Exchange rate')]
-    for index, text in expected:
-        if index >= len(header) or header[index] != text:
-            return False
-    if len(header) <= 11 or not header[11].startswith('Result'):
+    required_columns = {
+        'Action': None,
+        'Time': None,
+        'Ticker': None,
+        'No. of shares': None,
+        'Price / share': None,
+        'Currency (Price / share)': None,
+        'Exchange rate': None,
+        'Result': None
+    }
+
+    for index, column_name in enumerate(header):
+        for required_column in required_columns:
+            if required_columns[required_column] is None and column_name.startswith(required_column):
+                required_columns[required_column] = index
+                if required_column == 'Result':
+                    parts = column_name.split()
+                    if len(parts) > 1:
+                        state['base_currency'] = parts[1].strip("()")
+                    else:
+                        state['base_currency'] = 'EUR'
+
+    if None in required_columns.values():
         return False
 
-    # Set the base currency. If header[11] is like "Result (XYZ)", use XYZ.
-    parts = header[11].split()
-    if len(parts) > 1:
-        state['base_currency'] = parts[1].strip("()")
-    else:
-        state['base_currency'] = 'EUR'
+    state['header_indices'] = required_columns
+
     return True
 
 def read_input_file(filename, input_folder, state):
@@ -139,7 +151,7 @@ def read_input_file(filename, input_folder, state):
             if not validate_header(header_row, state):
                 raise ValueError(f"CSV header in {filename} is invalid.")
             for row in reader:
-                if row and row[0] in SUPPORTED_ACTIONS:
+                if row and row[state['header_indices']['Action']] in SUPPORTED_ACTIONS:
                     state['rows'].append(row)
     except FileNotFoundError:
         raise FileNotFoundError(f"File '{filename}' not found in folder '{input_folder}'.")
@@ -181,9 +193,10 @@ def find_tickers_with_sell(state):
     """Identifies all tickers that have sell actions."""
     sell_actions = {'Market sell', 'Limit sell'}
     tickers = state['tickers_with_sell']
+    header_indices = state['header_indices']
     for row in state['rows']:
-        if row[0] in sell_actions and row[3] not in tickers:
-            tickers.append(row[3])
+        if row[header_indices['Action']] in sell_actions and row[header_indices['Ticker']] not in tickers:
+            tickers.append(row[header_indices['Ticker']])
 
 def process_transactions(state):
     """Processes transactions and builds the XML structure.
@@ -209,21 +222,22 @@ def process_transactions(state):
     tickers = state['tickers_with_sell']
     print("Tickers with sale:", ', '.join(tickers) if tickers else '/')
 
-    # 0: Action, 1: Time, 3: Ticker, 7: No. of shares, 8: Price / share, 9: Currency (Price / share), 10: Exchange rate, 11: starts with Result
+    header_indices = state['header_indices']
+
     for row in state['rows']:
-        action_full = row[0]
+        action_full = row[header_indices['Action']]
         # Process only rows with supported actions and tickers with sell actions.
         if action_full not in SUPPORTED_ACTIONS:
             continue
 
-        ticker = row[3]
+        ticker = row[header_indices['Ticker']]
         if ticker not in state['tickers_with_sell']:
             continue
 
-        date = row[1].split()[0]
-        price = row[8]
-        currency = row[9]
-        rate = row[10]
+        date = row[header_indices['Time']].split()[0]
+        price = row[header_indices['Price / share']]
+        currency = row[header_indices['Currency (Price / share)']]
+        rate = row[header_indices['Exchange rate']]
         base_currency = state['base_currency']
         usd_eur = state['usd_eur']
 
@@ -237,7 +251,7 @@ def process_transactions(state):
         else:
             raise ValueError(f"Unsupported base currency: {base_currency}")
 
-        quantity = str(round(float(row[7]), 4))
+        quantity = str(round(float(row[header_indices['No. of shares']]), 4))
         item = KVDP_item(doh, ticker)
         # Extract the buy/sell part from the action string (e.g., "Market sell" -> "sell")
         action = action_full.split()[1].lower()
@@ -262,7 +276,8 @@ def main():
         'usd_eur': {},
         'rows': [],
         'tickers_with_sell': [],
-        'base_currency': 'EUR'
+        'base_currency': 'EUR',
+        'header_indices': {}
     }
     input_folder = "input"
     rate_folder = "rate"
