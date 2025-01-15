@@ -33,7 +33,10 @@ def prettify(elem):
 
 def convert_to_base(price, rate):
     """Converts the given price to the base currency using the exchange rate."""
-    return str(round(float(price) / float(rate), 4))
+    try:
+        return str(round(float(price) / float(rate), 4))
+    except (ValueError, ZeroDivisionError) as e:
+        raise ValueError(f"Invalid price or rate: {price}, {rate}. Details: {e}")
 
 def find_usd_eur_rate(date, usd_eur):
     """Finds the USD/EUR exchange rate for a given date.
@@ -46,8 +49,11 @@ def find_usd_eur_rate(date, usd_eur):
 
 def convert_usd_to_eur(price, date, usd_eur):
     """Converts price from USD to EUR using the exchange rate for the given date."""
-    rate = find_usd_eur_rate(date, usd_eur)
-    return str(round(float(price) * float(rate), 4))
+    try:
+        rate = find_usd_eur_rate(date, usd_eur)
+        return str(round(float(price) * float(rate), 4))
+    except (ValueError, ZeroDivisionError) as e:
+        raise ValueError(f"Failed to convert USD price {price} to EUR on date {date}. Details: {e}")
 
 def sale(root, date, quantity, price):
     """Adds a sale transaction to the XML structure."""
