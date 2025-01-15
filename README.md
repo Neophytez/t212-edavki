@@ -9,6 +9,9 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
 
 ## Posodobitve
 
+- **15.01.2025:**  
+  - Dinamična validacija headerja.
+  - Popravek XML strukture.
 - **11.01.2025:**  
   - Popravek za nov header.
 - **06.01.2025:**  
