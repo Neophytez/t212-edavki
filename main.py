@@ -101,7 +101,7 @@ def KVDP_item(root, ticker):
     SubElement(securities, 'IsFond').text = 'false'
     row_elem = SubElement(securities, 'Row')
     SubElement(row_elem, 'ID').text = '0'
-    return securities
+    return row_elem
 
 def header_xml(root):
     """Adds the header to the XML structure."""
@@ -270,8 +270,7 @@ def process_transactions(state):
             continue
 
         # Add extra field F8
-        f8 = SubElement(item, 'F8')
-        f8.text = '0.0000'
+        SubElement(item, 'F8').text = '0.0000'
         count += 1
 
     return envelope, count
