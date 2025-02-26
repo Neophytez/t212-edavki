@@ -72,7 +72,7 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
    - Razširi arhivsko datoteko in se prestavi v mapo `t212-edavki-main`.
 
 3. **Priprava CSV datotek:**  
-   - Iz Trading212 izvozi CSV datoteke.
+   - Iz Trading212 izvozi CSV datoteke. Pri izvozu označi vse 4 opcije - Orders, Dividends, Transactions in Interest.
    - Kopiraj jih v mapo `t212-edavki-main/input` (skripta podpira več CSV datotek hkrati).
 
 4. **Zagon skripte:**  
