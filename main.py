@@ -117,7 +117,7 @@ def header_xml(root):
 
 def validate_header(header, state):
     """Dynamically validates the CSV header by searching for relevant columns.
-       Also updates base_currency in state based on header data."""
+       Also updates base_currency in state based on available data."""
     required_columns = {
         'Action': None,
         'Time': None,
@@ -126,24 +126,25 @@ def validate_header(header, state):
         'Price / share': None,
         'Currency (Price / share)': None,
         'Exchange rate': None,
-        'Result': None
+        'Result': None,  # 2022 format
+        'Total': None  # 2023 format
     }
 
     for index, column_name in enumerate(header):
         for required_column in required_columns:
             if required_columns[required_column] is None and column_name.startswith(required_column):
                 required_columns[required_column] = index
-                if required_column == 'Result':
+                if required_column in ('Result', 'Total'):  # Use either 'Result' or 'Total' for base currency detection
                     parts = column_name.split()
                     if len(parts) > 1:
                         state['base_currency'] = parts[1].strip("()")
                     else:
                         state['base_currency'] = 'EUR'
 
-    if None in required_columns.values():
+    if all(value is None for key, value in required_columns.items() if key in ('Result', 'Total')):
         return False
 
-    state['header_indices'] = required_columns
+    state['header_indices'] = {k: v for k, v in required_columns.items() if v is not None}
 
     return True
 
