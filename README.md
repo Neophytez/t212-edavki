@@ -8,7 +8,8 @@ Skripta za pretvorbo Trading212 CSV datotek v eDavki XML pripomore k hitrejšemu
 Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddajo davčne napovedi. Pred oddajo XML datoteke **obvezno ročno preveri** vse vnose. Z uporabo skripte sprejemaš popolno odgovornost za morebitne napake, izgube ali škodo, ki bi nastale zaradi nepravilno generiranih podatkov. Avtor skripte ne sprejema odgovornosti za kakršnekoli posledice.
 
 ## Posodobitve
-
+- **28.02.2025:**
+  - Dodana validacija za starejše CSV headerje (credits: [Žan](https://github.com/zanmoskotevc))
 - **15.01.2025:**  
   - Dinamična validacija headerja.
   - Popravek XML strukture.
