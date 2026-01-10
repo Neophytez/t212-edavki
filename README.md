@@ -11,7 +11,7 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
 - **10.01.2026:**  
   - Posodobljena tečajnica USD/EUR 1999-2025.
 - **28.02.2025:**
-  - Dodana validacija za starejše CSV headerje (credits: [Žan](https://github.com/zanmoskotevc))
+  - Dodana validacija za starejše CSV headerje (credits: [trideetztz](https://github.com/trideetztz))
 - **15.01.2025:**  
   - Dinamična validacija headerja.
   - Popravek XML strukture.
@@ -99,4 +99,5 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
 ## Prišlo do težav?
 
 Če skripta ne deluje, odpri **"New issue"** (klikni na zavihek **"Issues"** in nato zeleni gumb desno). Na e-pošto ne odgovarjam, zato prosim, da težave prijaviš preko GitHub issue sistema.
+
 
