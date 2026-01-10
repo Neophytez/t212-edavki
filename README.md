@@ -1,4 +1,4 @@
-# Trading212 CSV to eDavki XML
+# Trading212 CSV to eDavki XML (Doh-KDVP)
 
 Skripta za pretvorbo Trading212 CSV datotek v eDavki XML pripomore k hitrejšemu in bolj organiziranemu ustvarjanju XML datotek za oddajo davčne napovedi.
 
@@ -8,6 +8,8 @@ Skripta za pretvorbo Trading212 CSV datotek v eDavki XML pripomore k hitrejšemu
 Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddajo davčne napovedi. Pred oddajo XML datoteke **obvezno ročno preveri** vse vnose. Z uporabo skripte sprejemaš popolno odgovornost za morebitne napake, izgube ali škodo, ki bi nastale zaradi nepravilno generiranih podatkov. Avtor skripte ne sprejema odgovornosti za kakršnekoli posledice.
 
 ## Posodobitve
+- **10.01.2026:**  
+  - Posodobljena tečajnica USD/EUR 1999-2025.
 - **28.02.2025:**
   - Dodana validacija za starejše CSV headerje (credits: [Žan](https://github.com/zanmoskotevc))
 - **15.01.2025:**  
@@ -91,9 +93,10 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
 
 ## Podpri delo
 
-Če ti skripta prihrani čas in trud, mi lahko častiš pivo.
+Če ti je skripta prihranila čas in trud, mi lahko častiš pivo.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HP6Z34ASADB4Y)
 
 ## Prišlo do težav?
 
 Če skripta ne deluje, odpri **"New issue"** (klikni na zavihek **"Issues"** in nato zeleni gumb desno). Na e-pošto ne odgovarjam, zato prosim, da težave prijaviš preko GitHub issue sistema.
+
