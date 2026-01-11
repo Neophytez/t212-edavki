@@ -71,7 +71,7 @@ Trading212 lahko izvozi količine z **več kot 8 decimalkami**, eDavki pa dovolj
 
 To **ni dejanska negativna zaloga**, ampak posledica zaokroževanja.
 
-###Opcija --fix-rounding-error
+### Opcija --fix-rounding-error
 
 Če skripto zaženeš z:
 ```
@@ -161,5 +161,6 @@ Privzeto je ta opcija **izklopljena**.
 - priloži izpis napake in opis problema
 
 Na e-pošto ne odgovarjam, zato prosim, da težave prijaviš preko GitHub issue sistema.
+
 
 
