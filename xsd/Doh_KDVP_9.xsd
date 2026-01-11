@@ -1,0 +1,1274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema id="Doh_KDVP_9" 
+           targetNamespace="http://edavki.durs.si/Documents/Schemas/Doh_KDVP_9.xsd" 
+           elementFormDefault="qualified" 
+           xmlns="http://edavki.durs.si/Documents/Schemas/Doh_KDVP_9.xsd" 
+           xmlns:r="http://edavki.durs.si/Documents/Schemas/Doh_KDVP_9.xsd" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:edp="http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd">
+  
+  <xs:import namespace="http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd" schemaLocation="EDP-Common-1.xsd" />
+
+  <xs:element name="Securities">
+    <xs:annotation>
+      <xs:documentation>Popisni list vrednostnega papirja oziroma investicijskega kupona</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ISIN" type="typeISIN" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>ISIN vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Code" type="typeKDVPItemCode" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oznaka vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="typeNaziv" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IsFond" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>Indikator ali je vrednostni papir sklad. Če je sklad potem je vrednost 'true', drugače je 'false'.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Resolution" type="typeResolution" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Opravilna številka sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ResolutionDate" type="xs:date" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Datum sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F5" type="typeDecimalPos14_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Plačan davek na dediščine in darila</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F11" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Zmanjšana nabavna vrednost vrednostnega papirja (na enoto) zaradi zmanjšanja osnovnega kapitala ob nespremenjeni količini</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F6" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F7" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina odsvojenega v.p.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F9" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Vrednost ob odsvojitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F10" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Pravilo iz drugega odstavka v povezavi s petim odstavkom 97.člena ZDoh-2</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="F8" type="typeDecimalNeg12_8" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Zaloga v.p.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SecuritiesShort">
+    <xs:annotation>
+      <xs:documentation>Popisni list vrednostnega papirja oziroma investicijskega kupona (PLVP Short)</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ISIN" type="typeISIN" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>ISIN vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Code" type="typeKDVPItemCode" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oznaka vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="typeNaziv" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IsFond" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>Indikator ali je vrednostni papir sklad. Če je sklad potem je vrednost 'true', drugače je 'false'.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F5" type="typeDecimalPos14_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Plačan davek na dediščine in darila</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F6" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F7" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina odsvojenega v.p.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F9" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Vrednost ob osvojitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="F8" type="typeDecimalNeg12_8" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Zaloga v.p.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SecuritiesWithContract">
+    <xs:annotation>
+      <xs:documentation>Popisni list vrednostnega papirja, ki je v gospodarjenju pri BPH družbi na podlagi pogodbe o gospodarjenju</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ISIN" type="typeISIN" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>ISIN vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Code" type="typeKDVPItemCode" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oznaka vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="typeNaziv" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IsFond" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>Indikator ali je vrednostni papir sklad. Če je sklad potem je vrednost 'true', drugače je 'false'.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="StockExchangeName" type="typeStockExchangeName" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv borznoposredniške družba</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Resolution" type="typeResolution" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Opravilna številka sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ResolutionDate" type="xs:date" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Datum sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F5" type="typeDecimalPos14_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Plačan davek na dediščine in darila</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F11" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Zmanjšana nabavna vrednost vrednostnega papirja (na enoto) zaradi zmanjšanja osnovnega kapitala ob nespremenjeni količini</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F6" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F7" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina odsvojenega v.p.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F9" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Vrednost ob osvojitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F10" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Pravilo iz drugega odstavka v povezavi s petim odstavkom 97.člena ZDoh-2</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="F8" type="typeDecimalNeg12_8" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Zaloga v.p.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SecuritiesWithContractShort" >
+    <xs:annotation>
+      <xs:documentation>Popisni list vrednostnega papirja, ki je v gospodarjenju pri BPH družbi na podlagi pogodbe o gospodarjenju PLVPGB (Short)</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ISIN" type="typeISIN" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>ISIN vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Code" type="typeKDVPItemCode" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oznaka vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="typeNaziv" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IsFond" type="xs:boolean" default="false">
+          <xs:annotation>
+            <xs:documentation>Indikator ali je vrednostni papir sklad. Če je sklad potem je vrednost 'true', drugače je 'false'.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="StockExchangeName" type="typeStockExchangeName" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv borznoposredniške družba</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F5" type="typeDecimalPos14_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Plačan davek na dediščine in darila</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F6" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F7" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina odsvojenega v.p.</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F9" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Vrednost ob osvojitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="F8" type="typeDecimalNeg12_8" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Zaloga v.p.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Shares">
+    <xs:annotation>
+      <xs:documentation>Popisni list deleža v gospodarskih družbah, zadrugah in drugih oblikah organiziranja</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Name" type="typeShareName" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Ime deleža</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ForeignCompany" type="xs:boolean" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Tuja družba</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DivestmentTaxNumber" type="edp:TaxNumberType" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Davčna številka odsvojene družbe</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SubsequentPayments" type="xs:boolean" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Uveljavljanje naknadnih vplačil v skladu s 4. točko sedmega odstavka 98. člena Zdoh-2</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SubsequentPaymentRow" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PaymentTaxNumber" type="edp:TaxNumberType" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Davčna številka družbe</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="PaymentDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Datum naknadnega vplačila</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="PaymentAmount" type="typeDecimalPos14_4" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Znesek</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Plačan davek na dediščine in darila</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F5" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F6" type="typePercent_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>% odsvojenega deleža</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F8" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Vrednost ob odsvojitvi</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F9" type="xs:boolean" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Pravilo iz drugega odstavka v povezavi s petim odstavkom 97.člena ZDoh-2</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+              <xs:element name="F7" type="typeDecimalPos14_8" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Stanje deleža</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SecuritiesCapitalReduction">
+    <xs:annotation>
+      <xs:documentation>Popisni list vrednostnega papirja za primer zmanjšanja osnovnega kapitala ob nespremenjeni količini vrednostnega papirja</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ISIN" type="typeISIN" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>ISIN vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Code" type="typeKDVPItemCode" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Oznaka vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="typeNaziv" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Naziv vrednostnega papirja</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Resolution" type="typeResolution" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Opravilna številka sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ResolutionDate" type="xs:date" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Datum sklepa skupščine</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Row" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" type="typeRunningNumber" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Zap. št.</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element name="Purchase">
+                  <xs:annotation>
+                    <xs:documentation>Pridobitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F1" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F2" type="typeGainType" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Način pridobitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F3" type="typeDecimalPos12_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Količina</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F4" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Nabavna vrednost ob pridobitvi (na enoto)</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="Sale">
+                  <xs:annotation>
+                    <xs:documentation>Odsvojitev</xs:documentation>
+                  </xs:annotation>
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="F5" type="xs:date" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Datum odsvojitve</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F6" type="typePercent_4" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>% zmanjšanja osnovnega kapitala</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                      <xs:element name="F7" type="typeDecimalPos14_8" minOccurs="0">
+                        <xs:annotation>
+                          <xs:documentation>Izplačana vrednost na podlagi zmanjšanja osnovnega kapitala</xs:documentation>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <xs:element name="Doh_KDVP">
+    <xs:complexType>
+      <xs:sequence>
+
+        <xs:element name="KDVP">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DocumentWorkflowID" type="edp:DocumentIDType" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Vrsta dokumenta - šifra</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="DocumentWorkflowName" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Vrsta dokumenta - naziv</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Year" type="typeYear" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Leto napovedi</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="PeriodStart" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Začetek obdobja napovedi (znotraj leta zgoraj)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="PeriodEnd" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Konec obdobja napovedi (znotraj leta zgoraj)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="IsResident" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Zavezanec je rezident Republike Slovenije</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="CountryOfResidenceID" type="typeCountryCode" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Koda države rezidentstva</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="CountryOfResidenceName" type="typeCountryName" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Naziv države rezidentstva</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="TelephoneNumber" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Telefonska številka</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="SecurityCount" type="typeCounter" default="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov vredostnega papirja</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="SecurityShortCount" type="typeCounter" default="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov vredostnega papirja na kratko</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="SecurityWithContractCount" type="typeCounter" default="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov vrednostnega papirja, ki je v BPH na podlagi pogodbe o gospodarjenju</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="SecurityWithContractShortCount" type="typeCounter" default="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov vrednostnega papirja, ki je v BPH na podlagi pogodbe o gospodarjenju</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ShareCount" type="typeCounter" default="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov deleža v gospodarskih družbah, zadrugah in drugih oblikah organiziranja</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="SecurityCapitalReductionCount" type="typeCounter" default="0" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Število popisnih listov vrednostnega papirja za primer zmanjšanja osnovnega kapitala ob nespremenjeni količini vrednostnega papirja</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="RemissionState" type="typeRemission" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Oprostitev plačila dohodnine ...: odstavek</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="RemissionArticle" type="typeRemission" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Oprostitev plačila dohodnine ...: člen</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ResConfirmationInstitution" type="typeInstitutionName" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Oprostitev plačila dohodnine ...: pristojni organ potrdila o rezidentstvu</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ResConfirmationDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Oprostitev plačila dohodnine ...: datum potrdila o rezidentstvu</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Email" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Telefonska številka</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="TaxRelief" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Znižanje pozitivne davčne osnove za izgubo, doseženo pri odsvojitvi nepremičnin</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrderNumber" type="typeOrderNumber" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Številka odločbe</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="OrderDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Datum odločbe</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="AcquirementDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Datum pridobitve</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ExpropriationDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Datum odsvojitve</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Loss" type="typeDecimalPos14_2" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Izguba (v EUR s centi)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Profit" type="typeDecimalPos14_2" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Dobiček (v EUR s centi)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="IncomeTax" type="typeDecimalPos14_2" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Odmerjena dohodnina (v EUR s centi)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="IsPrefilled" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Predizpolnjeno polje</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="TaxBaseDecrease" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Znižanje pozitivne davčne osnove za preneseno izgubo (tretji odstavek 97. člena ZDoh-2)</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="OrderNumber" type="typeOrderNumber" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Številka odločbe</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="OrderDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Datum odločbe</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="TaxOfficeID" type="typeTaxOfficeCode" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Šifra davčnega urada</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="TaxOfficeName" type="typeTaxOfficeName" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Naziv davčnega urada</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Loss" type="typeDecimalPos14_2" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Izguba (v EUR s centi)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="Attachment" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Priloge</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Document" type="typeDocumentName" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <xs:element name="KDVPItem" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ItemID" type="typeRunningNumber" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>ID popisnega lista</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="InventoryListType" type="typeInventory" minOccurs="1">
+                <xs:annotation>
+                  <xs:documentation>Vrsta popisnega lista</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="Name" type="typeNaziv" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Naziv popisnega lista</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="HasForeignTax" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Davek plačan v tujini</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ForeignTax" type="typeDecimalPos14_4" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Tuji davek (v EUR s centi)</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="FTCountryID" type="typeCountryCode" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Koda države v kateri je plačan tuji davek</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="FTCountryName" type="typeCountryName" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Ime države v kateri je plačan tuji davek</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="HasLossTransfer" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Prenos izgube po tretjem odstavku 97.člena ZDoh-2</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="ForeignTransfer" type="xs:boolean" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>Odsvojitev deleža, ki je bil v tujini pridobljen z zamenjavo deleža skladno z Direktivo 90/434/EGS</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="TaxDecreaseConformance" type="xs:boolean" minOccurs="0" nillable="true">
+                <xs:annotation>
+                  <xs:documentation>Uveljavljanje oprostitve po 5. točki drugega odstavka 96. člena ZDoh-2</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:choice>
+                <xs:element ref="Securities" minOccurs="0"/>
+                <xs:element ref="SecuritiesShort"  minOccurs="0"/>
+                <xs:element ref="Shares" minOccurs="0" />
+                <xs:element ref="SecuritiesWithContract" minOccurs="0" />
+                <xs:element ref="SecuritiesWithContractShort" minOccurs="0"/>
+                <xs:element ref="SecuritiesCapitalReduction" minOccurs="0"/>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    <xs:unique name="uniqueSecurities">
+      <xs:selector xpath="r:Securities" />
+      <xs:field xpath="r:Name" />
+    </xs:unique>
+    <xs:unique name="uniqueSecuritiesWithContract">
+      <xs:selector xpath="r:SecuritiesWithContract" />
+      <xs:field xpath="r:Name" />
+    </xs:unique>
+    <xs:unique name="uniqueShares">
+      <xs:selector xpath="r:Shares" />
+      <xs:field xpath="r:Name" />
+    </xs:unique>
+  </xs:element>
+
+  <xs:element name="AttachmentHash">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Hash" type="xs:string" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Document types definition -->
+  <xs:simpleType name="typeYear">
+    <xs:restriction base="xs:int">
+      <xs:pattern value="[1-9][0-9]{3}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeCounter">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeRunningNumber">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalPos12_0">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="0" />
+      <xs:totalDigits value="12" />
+      <xs:minInclusive value="0" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeSecuritiesQuantity">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="4" />
+      <xs:totalDigits value="12" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeSecuritiesShortQuantity">
+    <xs:restriction base="xs:decimal">
+      <xs:fractionDigits value="4" />
+      <xs:totalDigits value="14" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalPos14_2">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,12}(\.\d{1,2})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalPos14_4">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,10}(\.\d{1,4})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalPos12_8">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,12}(\.\d{1,8})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalNeg12_8">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="[-]?\d{1,12}(\.\d{1,8})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDecimalPos14_8">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,14}(\.\d{1,8})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typePercent_2">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,3}(\.\d{1,2})?" />
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typePercent_4">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,3}(\.\d{1,4})?" />
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeName">
+    <xs:restriction base="xs:string">
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeNaziv">
+    <xs:restriction base="xs:string">
+    <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeCountryName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="40" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeCountryCode">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{3}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeInventory">
+    <xs:restriction base="xs:string">
+
+      <xs:enumeration value="PLVP">
+        <xs:annotation>
+          <xs:documentation>Popisni list vrednostnega papirja oziroma invecticijskega kupona</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PLVPSHORT">
+        <xs:annotation>
+          <xs:documentation>Popisni list vrednostnega papirja oziroma invecticijskega kupona SHORT</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PLVPGB">
+        <xs:annotation>
+          <xs:documentation>Popisni list vrednostnega papirja, ki je v gospodarjenju pri borznoposredniški družbi na podlagi pogodbe o gospodarjenju</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PLVPGBSHORT">
+        <xs:annotation>
+          <xs:documentation>Popisni list vrednostnega papirja, ki je v gospodarjenju pri borznoposredniški družbi na podlagi pogodbe o gospodarjenju SHORT</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PLD">
+        <xs:annotation>
+          <xs:documentation>Popisni list deleža v gospodarskih družbah, zadrugah in drugih oblikah organiziranja</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PLVPZOK">
+        <xs:annotation>
+          <xs:documentation>Popisni list vrednostnega papirja za primer zmanjšanja osnovnega kapitala ob nespremenjeni količini vrednostnega papirja</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeRemission">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeInstitutionName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeTaxOfficeName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="40" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeTaxOfficeCode">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{2}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeOrderNumber">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="50" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeDocumentName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="70" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeISIN">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="12" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeKDVPItemCode">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="10" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeStockExchangeName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="30" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeResolution">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeShareName">
+    <xs:restriction base="typeName">
+      <xs:maxLength value="100" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="typeGainType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A">
+        <xs:annotation>
+          <xs:documentation>vložek kapitala</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="B">
+        <xs:annotation>
+          <xs:documentation>nakup</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="C">
+        <xs:annotation>
+          <xs:documentation>povečanje kapitala družbe z lastnimi sredstvi zavezanca</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="D">
+        <xs:annotation>
+          <xs:documentation>povečanje kapitala družbe iz sredstev družbe</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="E">
+        <xs:annotation>
+          <xs:documentation>zamenjava kapitala ob statusnih spremembah družbe</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="F">
+        <xs:annotation>
+          <xs:documentation>dedovanje</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="G">
+        <xs:annotation>
+          <xs:documentation>darilo</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="H">
+        <xs:annotation>
+          <xs:documentation>drugo</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="I">
+        <xs:annotation>
+          <xs:documentation>povečanje kapitalskega deleža v osebni družbi zaradi pripisa dobička kapitalskemu deležu</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="J">
+        <xs:annotation>
+          <xs:documentation>pridobitev kapita​la v inovativnih zagonskih podjetjih</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>	  
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- Document types definition -->
+  <!-- Document envelope that contains the document header, signatures and its body. -->
+  <xs:element name="Envelope">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="edp:Header" />
+        <xs:element ref="edp:AttachmentList" minOccurs="0" />
+        <xs:element ref="edp:Signatures" />
+        <xs:element name="body">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="edp:bodyContent" />
+              <xs:element ref="Doh_KDVP" />
+              <xs:element ref="AttachmentHash" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

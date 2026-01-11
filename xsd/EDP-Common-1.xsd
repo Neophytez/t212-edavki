@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema id="EDP-Common-1" targetNamespace="http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd" elementFormDefault="qualified" xmlns="http://edavki.durs.si/Documents/Schemas/EDP-Common-1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Header">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+          Common data for all eDavki documents.
+        </xs:documentation>
+        <xs:documentation xml:lang="sl">
+          Skupni podatki za vse eDavki dokumente.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="taxpayer" type="taxPayerType">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              Tax payer for this document
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Podatki o davčnem zavezancu za ta dokument
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="responseTo" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              This document is a response to another document (document id)
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Ta dokument je odgovor na drug dokument (document id)
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Workflow" type="workflowType" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Podatki o workflowu dokumenta
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="CustodianInfo" type="custodianType" minOccurs="0" >
+          <xs:annotation>
+            <xs:documentation>
+              Podatki skrbnika / vnasa skrbnik
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="domain" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              System where document is deposited
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Domena sistema kamor je vložen dokument
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Transformation">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Instruct how to display xml document
+        localfile - xslt transformation is stored localy on edavki
+        url - xslt transformation is published on internet
+        data - xslt transformation is included in here document xml
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element name="localfile" type="xs:string" />
+        <xs:element name="url" type="xs:string" />
+        <xs:element name="data" type="xs:string" />
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AttachmentList">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Document attachments.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ExternalAttachment" minOccurs="0" maxOccurs="unbounded" >
+          <xs:complexType>
+            <xs:sequence>
+              <!--xs:element name="id" type="xs:nonNegativeInteger" /-->
+              <xs:element name="attachmentId" type="xs:int" minOccurs="0" />
+              <xs:element name="type" type="xs:string" minOccurs="0" />
+              <xs:element name="filename" type="xs:string" />
+              <xs:element name="mimetype" type="xs:string" />
+              <xs:element name="hash">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="type" type="xs:string" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="description" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Signatures">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Document signature(s)
+      </xs:documentation>
+      <xs:documentation xml:lang="en">
+        Podpisi na dokumentu.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element name="PreparerSignature">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              Signature of the person that prepared the document.
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Podpis osebe ki je pripravila dokument.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Preparer" type="signerType" />
+              <xs:any processContents="lax" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+              <!--xs:element name="Presentation" ref="presentationType" /-->
+              <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+                <xs:annotation>
+                  <xs:documentation>Place for ds:Signature element</xs:documentation>
+                </xs:annotation>
+              </xs:any>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DepositorSignature">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              Signature of the person that deposited the document.
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Podpis osebe ki je vložila dokument.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Depositor" type="signerType" />
+              <xs:any processContents="lax" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+              <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+                <xs:annotation>
+                  <xs:documentation>Place for ds:Signature element</xs:documentation>
+                </xs:annotation>
+              </xs:any>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element ref="PreparerServerSignature" />
+        <xs:element ref="DepositorServerSignature" />
+        <xs:element ref="ServerSignature" />
+        <xs:element name="NonEDP">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">
+              Document information for documents coming from the backend system (not signed).
+            </xs:documentation>
+            <xs:documentation xml:lang="sl">
+              Podatki od dokumentih iz zalednega sistema (niso podpisani)
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="receipt" type="receiptType" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DepositorServerSignature">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Document depositor.
+      </xs:documentation>
+      <xs:documentation xml:lang="en">
+        Dokument vložil.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Depositor" type="serverSignerType" />
+        <xs:element name="receipt" type="receiptType" />
+        <xs:any processContents="lax" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+        <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+          <xs:annotation>
+            <xs:documentation>Place for ds:Signature element</xs:documentation>
+          </xs:annotation>
+        </xs:any>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PreparerServerSignature">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Document preparer.
+      </xs:documentation>
+      <xs:documentation xml:lang="en">
+        Dokument pripravil.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Preparer" type="serverSignerType" />
+        <xs:any processContents="lax" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+        <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+          <xs:annotation>
+            <xs:documentation>Place for ds:Signature element</xs:documentation>
+          </xs:annotation>
+        </xs:any>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ServerSignature">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+        Signature confirming reception of the document by DURS.
+        Placed inside the edp:DepositorSignature/ds:Signature/ds:Object[@Id='ServerSignatureObject']
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="receipt" type="receiptType" />
+        <xs:any processContents="lax" minOccurs="0" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+        <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+          <xs:annotation>
+            <xs:documentation>Place for ds:Signature element</xs:documentation>
+          </xs:annotation>
+        </xs:any>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TSASignature">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any processContents="lax" namespace="http://www.w3.org/2000/09/xmldsig#">
+          <xs:annotation>
+            <xs:documentation>Place for ds:Signature element</xs:documentation>
+          </xs:annotation>
+        </xs:any>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="receiptType">
+    <xs:sequence>
+      <xs:element name="timestamp" type="xs:dateTime" />
+      <xs:element name="documentNumber" type="xs:string" />
+      <xs:element name="name" type="xs:string" minOccurs="0" />
+      <xs:element name="metaText1" type="xs:string" minOccurs="0" />
+      <xs:element name="metaDate1" type="xs:dateTime" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="signerType">
+    <xs:sequence>
+      <xs:element name="timestamp" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Timestamp when document signed (informative)</xs:documentation>
+          <xs:documentation xml:lang="sl">Čas podpisa dokumenta (informativen)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Name of signing user (from certificate)</xs:documentation>
+          <xs:documentation xml:lang="sl">Ime podpisnika (iz digitalnega potrdila)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="serverSignerType">
+    <xs:sequence>
+      <xs:element name="timestamp" type="xs:dateTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Timestamp when document signed</xs:documentation>
+          <xs:documentation xml:lang="sl">Čas podpisa dokumenta</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Name of signing user</xs:documentation>
+          <xs:documentation xml:lang="sl">Ime podpisnika</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="id" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Identification number of signing user</xs:documentation>
+          <xs:documentation xml:lang="sl">Identifikacijska številka podpisnika</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="presentationType">
+    <xs:sequence>
+      <xs:any processContents="lax" minOccurs="2" maxOccurs="2" namespace="urn:schemas-hermes-softlab-com:2003/09/Signatures" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="taxPayerType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="taxNumber" type="TaxNumberType" minOccurs="0" />
+        <xs:element name="vatNumber" type="VatNumberType" minOccurs="0" />
+      </xs:choice>
+      <xs:element name="taxpayerType" type="taxpayerTypeType" minOccurs="0" />
+      <xs:element name="name" type="xs:string" minOccurs="0" />
+      <xs:element name="address1" type="xs:string" minOccurs="0" />
+      <xs:element name="address2" type="xs:string" minOccurs="0" />
+      <xs:element name="city" type="xs:string" minOccurs="0" />
+      <xs:element name="postNumber" type="PostNumberType" minOccurs="0" />
+      <xs:element name="postName" type="xs:string" minOccurs="0" />
+      <xs:element name="municipalityName" type="xs:string" minOccurs="0" />
+      <xs:element name="birthDate" type="xs:date" minOccurs="0" />
+      <xs:element name="maticnaStevilka" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Maticna stevilka</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="invalidskoPodjetje" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Maticna stevilka</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="resident" type="xs:boolean" minOccurs="0" />
+      <xs:element name="activityCode" type="xs:string" minOccurs="0" />
+      <xs:element name="activityName" type="xs:string" minOccurs="0" />
+      <xs:element name="countryID" type="xs:string" minOccurs="0" />
+      <xs:element name="countryName" type="xs:string" minOccurs="0" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="bodyContent" />
+
+  <xs:complexType name="workflowType">
+    <xs:sequence>
+        <xs:element name="DocumentWorkflowID" type="DocumentIDType"  minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Vrsta dokumenta - šifra</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DocumentWorkflowName" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Vrsta dokumenta - naziv</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:simpleType name="TaxNumberType">
+    <xs:restriction base="xs:positiveInteger">
+      <xs:pattern value="[0-9]{8}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="VatNumberType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z][A-Z].+" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="taxpayerTypeType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FO">
+        <xs:annotation>
+          <xs:documentation>Fizična oseba</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PO">
+        <xs:annotation>
+          <xs:documentation>Pravna oseba</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SP">
+        <xs:annotation>
+          <xs:documentation>Fizična oseba z dejavnostjo</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PostNumberType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="12" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="custodianType">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0" />
+      <xs:element name="address1" type="xs:string" minOccurs="0" />
+      <xs:element name="address2" type="xs:string" minOccurs="0" />
+      <xs:element name="city" type="xs:string" minOccurs="0" />
+      <xs:element name="CustodianNotes" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Custodian notes kadar oddaja skrbnik</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CustodianSubmitDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Datum oddaje custodiana</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="NER">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Total_F8" type="Decimal14_0Type" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> ...</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Total_F9" type="Decimal14_0Type" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> ...</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Total_F10" type="Decimal14_0Type" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation> ...</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="NERItem" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="F1_Name" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F2_Address" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F3_ResidentCountry" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation>ISO 2 letter country code</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F4_TaxNumber" type="xs:int" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F5_BirthDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F6_Benefits" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F7_OtherBenefits" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F8" type="Decimal14_0Type" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F9" type="Decimal14_0Type" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="F10" type="Decimal14_0Type" minOccurs="0">
+                <xs:annotation>
+                  <xs:documentation> ...</xs:documentation>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="Decimal14_0Type">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,14}" />
+      <!--xs:fractionDigits value="0" />
+      <xs:totalDigits value="14" /-->
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Decimal14_2Type">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="\d{1,14}(\.\d{1,2})?" />
+      <!--xs:fractionDigits value="0" />
+      <xs:totalDigits value="14" /-->
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="NegativeDecimal14_0Type">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="[\-+]?\d{1,14}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NegativeDecimal14_2Type">
+    <xs:restriction base="xs:decimal">
+      <xs:pattern value="[\-+]?\d{1,14}(\.\d{1,2})?" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="DocumentIDType">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
