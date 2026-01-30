@@ -8,19 +8,19 @@ from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
 # =========================
-# USER SETTINGS (EDIT THIS)
+# 1
 # =========================
-TAX_YEAR = "2024"
+TAX_YEAR = "2025"
 PERIOD_START = f"{TAX_YEAR}-01-01"
 PERIOD_END = f"{TAX_YEAR}-12-31"
 
 TAX_NUMBER = "12345678"
-FULL_NAME = "Full name"
-ADDRESS = "Address"
-CITY = "City"
-POST_NUMBER = "1000"
-BIRTH_DATE = "1995-12-31"
-EMAIL = "your-email@should-go.here"
+FULL_NAME = "Andraž Grgič"
+ADDRESS = "Manžan 3d"
+CITY = "Koper"
+POST_NUMBER = "6000"
+BIRTH_DATE = "1999-03-11"
+EMAIL = "grgicandraz@gmail.com"
 PHONE = "069240240"
 
 # =========================
@@ -604,3 +604,4 @@ if __name__ == "__main__":
         main()
     except Exception as err:
         print("Error:", err)
+
