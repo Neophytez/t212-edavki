@@ -280,9 +280,9 @@ def compute_eur_unit_price(row: list[str], state: dict) -> Decimal:
     if currency == "EUR":
         return to_decimal(price)
 
-    # Export base is EUR => exchange rate converts directly into EUR
+    # Export base is EUR => exchange rate converts according to required (Banka Slovenije) conversion rate
     if base_currency == "EUR":
-        return convert_to_base(price, rate)
+        return convert_usd_to_eur(price, date, usd_eur)
 
     # Export base is USD => first convert into USD base, then USD -> EUR by date
     if base_currency == "USD":
@@ -604,3 +604,4 @@ if __name__ == "__main__":
         main()
     except Exception as err:
         print("Error:", err)
+
