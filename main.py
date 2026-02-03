@@ -282,7 +282,7 @@ def compute_eur_unit_price(row: list[str], state: dict) -> Decimal:
 
     # Export base is EUR but asset currency is USD => exchange rate converts according to required (Banka Slovenije) conversion rate
     if base_currency == "EUR" and currency == "USD":
-        return convert_usd_to_eur(price, date, usd_eur)
+        return convert_usd_to_eur(to_decimal(price), date, usd_eur)
 
     # Export base is EUR fallback to Trading212 conversion rate
     if base_currency == "EUR":
