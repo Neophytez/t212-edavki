@@ -280,7 +280,11 @@ def compute_eur_unit_price(row: list[str], state: dict) -> Decimal:
     if currency == "EUR":
         return to_decimal(price)
 
-    # Export base is EUR => exchange rate converts directly into EUR
+    # Export base is EUR but asset currency is USD => exchange rate converts according to required (Banka Slovenije) conversion rate
+    if base_currency == "EUR" and currency == "USD":
+        return convert_usd_to_eur(to_decimal(price), date, usd_eur)
+
+    # Export base is EUR fallback to Trading212 conversion rate
     if base_currency == "EUR":
         return convert_to_base(price, rate)
 
@@ -604,3 +608,4 @@ if __name__ == "__main__":
         main()
     except Exception as err:
         print("Error:", err)
+
