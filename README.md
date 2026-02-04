@@ -8,6 +8,9 @@ Skripta za pretvorbo Trading212 CSV datotek v eDavki XML pripomore k hitrejšemu
 Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddajo davčne napovedi. Pred oddajo XML datoteke **obvezno ročno preveri** vse vnose. Z uporabo skripte sprejemaš popolno odgovornost za morebitne napake, izgube ali škodo, ki bi nastale zaradi nepravilno generiranih podatkov. Avtor skripte ne sprejema odgovornosti za kakršnekoli posledice.
 
 ## Posodobitve
+- **04.02.2026:**  
+  - Preračun USD transakcij v EUR po tečaju [ECB Europa](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist.xml) na dan transakcije namesto T212 exchange rate. (credits: [Vid Pleterski](https://github.com/vidp1))
+  - *Opomba:* Uradni tečaji so trenutno uporabljeni samo za USD. Za druge valute se še vedno uporablja T212 exchange rate.
 - **11.01.2026:**  
   - Dodana podpora za **Stop sell**.
   - Dodana opcija `--fix-rounding-error`
@@ -15,7 +18,7 @@ Ta skripta je zgolj pripomoček, ki poenostavi generiranje XML datoteke za oddaj
 - **10.01.2026:**  
   - Posodobljena tečajnica USD/EUR 1999-2025.
 - **28.02.2025:**
-  - Dodana validacija za starejše CSV headerje (credits: [trideetztz](https://github.com/trideetztz))
+  - Dodana validacija za starejše CSV headerje. (credits: [trideetztz](https://github.com/trideetztz))
 - **15.01.2025:**  
   - Dinamična validacija headerja.
   - Popravek XML strukture.
@@ -161,6 +164,7 @@ Privzeto je ta opcija **izklopljena**.
 - priloži izpis napake in opis problema
 
 Na e-pošto ne odgovarjam, zato prosim, da težave prijaviš preko GitHub issue sistema.
+
 
 
 
